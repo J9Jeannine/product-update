@@ -1,0 +1,75 @@
+{
+  "output": {
+    "title": "PRODUCT DASHBOARD - NOVELISKA",
+    "spreadsheet_id": "1J4Q5dV0q2selwCMIVYHYgsGpH3M94b056siX1ZIwdSk",
+    "drive_folder_id": "1NSGnJpPmvi26InHuguCI_2E9I-WRPPi4",
+    "drive_folder_note": "Same folder as 'PnL KIZORA' (1reNOsgEOBzIrL9hH3pXBhLcIBQIoJUwD78iRlS_o_mU).",
+    "service_account_note": "The sheet must be shared with the service account in GOOGLE_SERVICE_ACCOUNT_JSON as writer."
+  },
+  "sources": {
+    "funnel": {
+      "spreadsheet_id": "1SkD7jrC-othtbwTYyz1VCK1HPIkEKHxc_hSAvRp2iL8",
+      "title": "Funnel Sheet",
+      "header_rows": 2,
+      "product_name_column": 6,
+      "product_name_header": "new PR NAME",
+      "status_column": 17,
+      "tested_statuses": ["launched", "re-launch", "relaunch"],
+      "note": "Column G holds our own product name. Column C is the competitor product and is never used. The status column has no header text; it sits between 'Ad copy' and 'Ad Account'."
+    },
+    "adspend": {
+      "spreadsheet_id": "1AycOl-3zM32yl09ogrEeVSx72FvadnYLV9ZcRH9Y49g",
+      "title": "DAILY ADSPEND",
+      "tab": "Raw Data",
+      "columns": {
+        "date": 0, "product": 1, "ad_account": 2, "spend": 3, "purchases": 4,
+        "cpa": 5, "cpm": 6, "ctr": 7, "cpc": 8, "roas": 9, "frequency": 10
+      },
+      "exclude_name_prefixes": ["ppe", "banned"],
+      "note": "Rows whose Product Name starts with PPE or BANNED are page-post-engagement / blocked spend and never belong to a product."
+    },
+    "performance": {
+      "file_id": "1vCbbwaDqlgI_5w2p5dyJtCJFHO9AuYHi",
+      "title": "Product Performance.xlsx",
+      "note": "Every tab name is one winner. A tested product with a tab is a winner, every other tested product is a loser. Nothing else counts."
+    },
+    "shopify": {
+      "store": "noveliska",
+      "domain_env": "SHOPIFY_NOVELISKA_DOMAIN",
+      "client_id_env": "SHOPIFY_NOVELISKA_CLIENT_ID",
+      "client_secret_env": "SHOPIFY_NOVELISKA_CLIENT_SECRET",
+      "api_version": "2026-07",
+      "timezone": "Europe/Helsinki",
+      "currency": "EUR",
+      "auth": "client_credentials grant, same as pnl-KIZORA scripts/update_revenue.py. The token lives 24h and is never stored.",
+      "retention_note": "The app has read_orders but NOT read_all_orders, so Shopify only returns orders from the last 60 days. Older days stay empty - they are never estimated."
+    }
+  },
+  "markets": {
+    "FI": {
+      "name": "Finland",
+      "funnel_tab": "FI",
+      "adspend_market": "FI",
+      "shopify_country": "FI",
+      "enabled": true
+    },
+    "FRCA": {"name": "France / Canada", "funnel_tab": "FRCA", "adspend_market": "FRCA", "shopify_country": "FR", "enabled": false},
+    "SE":   {"name": "Sweden",          "funnel_tab": "SE",   "adspend_market": "SE",   "shopify_country": "SE", "enabled": false},
+    "UK":   {"name": "United Kingdom",  "funnel_tab": "UK",   "adspend_market": "UK",   "shopify_country": "GB", "enabled": false},
+    "NLBE": {"name": "Netherlands / Belgium", "funnel_tab": "NLBE", "adspend_market": "NLBE", "shopify_country": "NL", "enabled": false}
+  },
+  "rules": {
+    "no_estimates": "A missing value stays empty. Nothing is estimated, interpolated or extrapolated.",
+    "series_start": "A product's time series starts on the first day it appears in DAILY ADSPEND.",
+    "real_roas": "Shopify revenue / ad spend. The ROAS column from the ad-spend sheet is reported separately as Meta ROAS.",
+    "real_cpa": "Ad spend / Shopify orders. The CPA column from the ad-spend sheet is reported separately as Meta CPA.",
+    "duplicates": "Rows identical in Date + Product Name + Ad Account + Spending are counted once and reported in the run log.",
+    "refunds": "Same rule as pnl-KIZORA: refunds dated by refund.createdAt (orders fetched via updated_at so a late refund on an old order is caught), plus disputes with status LOST or ACCEPTED dated by finalizedOn. WON, PREVENTED, NEEDS_RESPONSE and UNDER_REVIEW are not counted. Non-EUR disputes are reported, not converted."
+  },
+  "schedule": {
+    "cron": "45 7 * * *",
+    "timezone": "Europe/Lisbon",
+    "rewrite_days": 7,
+    "note": "Re-pulls and overwrites the last 7 days so late orders and late ad spend land, and picks up new products from the Funnel Sheet automatically."
+  }
+}

@@ -1,102 +1,103 @@
-market,funnel_name,normalized_key,funnel_status,tested,adspend_names,adspend_rows,first_adspend_date,last_adspend_date,perf_tab,winner_loser,shopify_title
-FI,Arterio,arterio,Launched,YES,Arterio FI,18,2026-09-10,2026-09-27,Arterio FI,WINNER,
-FI,atriso,atriso,Launched,YES,Atriso FI,2,2026-08-06,2026-08-07,,LOSER,
-FI,Calora,calora,Launched,YES,Calora FI,1,2026-06-19,2026-06-19,,LOSER,
-FI,Cervi,cervi,Launched,YES,Cervi FI,1,2026-09-04,2026-09-04,,LOSER,
-FI,cholina,cholina,Launched,YES,Cholina FI,1,2026-06-04,2026-06-04,,LOSER,
-FI,circula,circula,Launched,YES,Circula FI,3,2026-06-03,2026-06-05,Circula,WINNER,
-FI,Circuva,circuva,Launched,YES,Circuva FI,1,2026-09-16,2026-09-16,,LOSER,
-FI,ClarityX,clarityx,Launched,YES,ClarityX FI,2,2026-09-20,2026-09-21,,LOSER,
-FI,Cleaso,cleaso,(empty),no,,0,,,,,
-FI,Collaga,collaga,Launched,YES,Collaga FI,1,2026-06-09,2026-06-09,,LOSER,
-FI,cortisa,cortisa,Launched,YES,,0,,,,LOSER,
-FI,cortisa2,cortisa2,Launched,YES,cortisa2 FI,1,2026-09-18,2026-09-18,,LOSER,
-FI,damaxel,damaxel,Launched,YES,Damaxel FI,1,2026-08-16,2026-08-16,,LOSER,
-FI,Dentasa,dentasa,Launched,YES,,0,,,,LOSER,
-FI,DermaFlex,dermaflex,Launched,YES,DermaFlex FI | Dermaflex FI,2,2026-05-27,2026-08-29,,LOSER,
-FI,dermaflex2,dermaflex2,Launched,YES,,0,,,,LOSER,
-FI,Dermalta,dermalta,Launched,YES,Dermalta FI,1,2026-06-18,2026-06-18,,LOSER,
-FI,Dizzora,dizzora,Launched,YES,Dizzora FI - relaunch,1,2026-07-05,2026-07-05,,LOSER,
-FI,Elora,elora,Launched,YES,Elora FI,1,2026-09-20,2026-09-20,,LOSER,
-FI,Erelso,erelso,Launched,YES,Erelso FI,4,2026-07-26,2026-07-29,,LOSER,
-FI,Erocto,erocto,Launched,YES,Erocto FI,3,2026-06-21,2026-06-23,,LOSER,
-FI,FeliZen,felizen,Launched,YES,FeliZen,1,2026-08-30,2026-08-30,,LOSER,
-FI,Fibaxo,fibaxo,Launched,YES,Fibaxo FI | Fibaxo FI 2.0,2,2026-08-08,2026-08-09,,LOSER,
-FI,Firmify,firmify,Launched,YES,Firmify FI,1,2026-09-25,2026-09-25,,LOSER,
-FI,Firmora,firmora,Launched,YES,Firmora™ FI,1,2026-09-02,2026-09-02,,LOSER,
-FI,fitax,fitax,Launched,YES,Fitax FI,1,2026-09-24,2026-09-24,,LOSER,
-FI,Fixodant,fixodant,Launched,YES,Fixodant FI,1,2026-08-28,2026-08-28,,LOSER,
-FI,Flexura,flexura,Launched,YES,Flexura FI,6,2026-09-22,2026-09-27,Flexura FI,WINNER,
-FI,Florina,florina,Launched,YES,,0,,,,LOSER,
-FI,fodax,fodax,Launched,YES,fodax FI,1,2026-08-25,2026-08-25,,LOSER,
-FI,Formala,formala,Launched,YES,Formala FI,1,2026-06-11,2026-06-11,,LOSER,
-FI,Gastrox,gastrox,Launched,YES,Gastrox FI 2.0,4,2026-09-09,2026-09-12,Gastrox FI 2.0,WINNER,
-FI,Glowila,glowila,Launched,YES,Glowila FI,1,2026-07-01,2026-07-01,,LOSER,
-FI,Glowina Oil,glowinaoil,Launched,YES,Glowina Oil FI,1,2026-06-06,2026-06-06,,LOSER,
-FI,GoHydro,gohydro,Launched,YES,GoHydro FI,2,2026-06-26,2026-06-27,,LOSER,
-FI,hardono,hardono,Launched,YES,Hardono FI,1,2026-06-09,2026-06-09,,LOSER,
-FI,healara,healara,Launched,YES,Healara FI,16,2026-06-21,2026-07-06,,LOSER,
-FI,HealRevive,healrevive,Launched,YES,HealRevive FI,1,2026-08-15,2026-08-15,,LOSER,
-FI,hormbalance,hormbalance,Launched,YES,Hormbalance FI,1,2026-05-24,2026-05-24,,LOSER,
-FI,Hylon,hylon,Launched,YES,Hylon FI - 2.0,9,2026-07-02,2026-07-10,,LOSER,
-FI,Hylon2,hylon2,Launched,YES,Hylon2 FI,3,2026-08-23,2026-08-25,,LOSER,
-FI,intifa,intifa,Launched,YES,intifa FI,1,2026-09-27,2026-09-27,,LOSER,
-FI,IntimaFit,intimafit,Launched,YES,,0,,,,LOSER,
-FI,itzora,itzora,Launched,YES,itzora FI - 2.,2,2026-07-28,2026-07-29,,LOSER,
-FI,JointCalm,jointcalm,Launched,YES,JointCalm FI,1,2026-08-14,2026-08-14,,LOSER,
-FI,Laxora,laxora,Launched,YES,Laxora FI,1,2026-09-20,2026-09-20,,LOSER,
-FI,liftala,liftala,Launched,YES,Liftala FI | Liftala FI – relaunch,16,2026-05-24,2026-06-09,Liftala,WINNER,
-FI,liftala2,liftala2,Launched,YES,Liftala2 FI,1,2026-08-23,2026-08-23,,LOSER,
-FI,Litava,litava,Launched,YES,Litava FI,1,2026-06-07,2026-06-07,,LOSER,
-FI,lumifirm,lumifirm,Launched,YES,Lumifirm FI,3,2026-09-03,2026-09-05,,LOSER,
-FI,Lungaso,lungaso,Launched,YES,Lungaso FI,4,2026-06-18,2026-06-21,,LOSER,
-FI,lutiva,lutiva,Launched,YES,,0,,,,LOSER,
-FI,Luvida,luvida,Launched,YES,Luvida FI,2,2026-09-23,2026-09-24,,LOSER,
-FI,Lympha,lympha,(empty),no,,0,,,,,
-FI,mamax,mamax,Ready to launch,no,,0,,,,,
-FI,Mobilixa,mobilixa,Launched,YES,Mobilixa FI,15,2026-05-31,2026-06-14,Mobilixa,WINNER,
-FI,nailperf,nailperf,Launched,YES,Nailperf FI,1,2026-05-30,2026-05-30,,LOSER,
-FI,Nervana,nervana,Launched,YES,Nervana FI,1,2026-09-13,2026-09-13,,LOSER,
-FI,Nervora,nervora,Launched,YES,Nervora FI,32,2026-08-27,2026-09-27,Nervora FI,WINNER,
-FI,Nervura,nervura,Launched,YES,Nervura FI,1,2026-09-13,2026-09-13,,LOSER,
-FI,Neurance,neurance,Launched,YES,Neurance FI | Neurance FI - 2.0,6,2026-06-24,2026-06-28,,LOSER,
-FI,Neurox,neurox,Launched,YES,Neurox FI,4,2026-09-13,2026-09-16,,LOSER,
-FI,Nicovo,nicovo,Launched,YES,Nicovo,1,2026-06-21,2026-06-21,,LOSER,
-FI,nicozina,nicozina,Launched,YES,Nicozina FI,1,2026-06-16,2026-06-16,,LOSER,
-FI,Noella,noella,Launched,YES,Noella FI,1,2026-06-12,2026-06-12,,LOSER,
-FI,Noraso,noraso,Launched,YES,Noraso FI,1,2026-08-18,2026-08-18,,LOSER,
-FI,Noreux,noreux,Launched,YES,Noreux FI,1,2026-08-22,2026-08-22,,LOSER,
-FI,Nosita,nosita,Launched,YES,Nosita FI,1,2026-06-10,2026-06-10,,LOSER,
-FI,Optila,optila,Launched,YES,Optila FI,7,2026-06-10,2026-06-16,Optila,WINNER,
-FI,Orident™,orident,Launched,YES,Orident™ FI,1,2026-08-13,2026-08-13,,LOSER,
-FI,Orivelle,orivelle,(empty),no,,0,,,,,
-FI,Orthix,orthix,Launched,YES,Orthix FI,1,2026-08-09,2026-08-09,,LOSER,
-FI,oxona,oxona,Launched,YES,oxona FI,1,2026-07-09,2026-07-09,,LOSER,
-FI,ozempa / Ozempa,ozempa,Launched,YES,Ozempa™ FI - relaunch | Ozempa™ FI - relaunch - 2.0 | ozempa FI,30,2026-06-07,2026-07-06,Ozempa,WINNER,
-FI,pawcol,pawcol,Launched,YES,pawcol™ FI,1,2026-07-11,2026-07-11,,LOSER,
-FI,pawox,pawox,Re-launch,YES,Pawox FI | Pawox SLS FI | pawox FI 2.0,23,2026-08-16,2026-09-16,pawox FI 2.0,WINNER,
-FI,Probita,probita,Launched,YES,Probita FI,1,2026-06-14,2026-06-14,,LOSER,
-FI,profix,profix,Launched,YES,Profix FI | Profix FI - relaunch,2,2026-05-28,2026-05-29,,LOSER,
-FI,Puffala,puffala,Launched,YES,Puffala FI,1,2026-05-21,2026-05-21,,LOSER,
-FI,Refrair,refrair,Launched,YES,Refrair FI,1,2026-05-28,2026-05-28,,LOSER,
-FI,resigo,resigo,Launched,YES,Resigo FI,1,2026-07-05,2026-07-05,,LOSER,
-FI,resigo2,resigo2,Launched,YES,Resigo2 FI,1,2026-08-23,2026-08-23,,LOSER,
-FI,Serenityx,serenityx,Launched,YES,Serenityx FI,1,2026-09-11,2026-09-11,,LOSER,
-FI,Sileva,sileva,Launched,YES,Sileva FI,3,2026-06-14,2026-06-16,,LOSER,
-FI,skinlifa,skinlifa,Launched,YES,Skinlifa FI,1,2026-06-02,2026-06-02,,LOSER,
-FI,skinosa,skinosa,Launched,YES,,0,,,,LOSER,
-FI,skinsa,skinsa,Launched,YES,,0,,,,LOSER,
-FI,smokola / Smokola,smokola,Launched,YES,Smokola FI,1,2026-08-07,2026-08-07,,LOSER,
-FI,Sonix,sonix,Launched,YES,Sonix FI,1,2026-09-12,2026-09-12,,LOSER,
-FI,TanLux,tanlux,Launched,YES,TanLux FI,1,2026-05-23,2026-05-23,,LOSER,
-FI,tinnoxa,tinnoxa,Launched,YES,tinnoxa FI,1,2026-06-07,2026-06-07,,LOSER,
-FI,vanix,vanix,Launched,YES,Vanix FI | Vanix FI 2.0 | Vanix FI 3.0,8,2026-07-15,2026-07-29,,LOSER,
-FI,Vatyla,vatyla,Launched,YES,Vatyla™ FI,1,2026-07-10,2026-07-10,,LOSER,
-FI,Velmora™,velmora,Launched,YES,Velmora™ FI | Velmora™ FI 2.0,2,2026-08-12,2026-08-13,,LOSER,
-FI,VenaFit,venafit,Launched,YES,VenaFit FI,1,2026-09-19,2026-09-19,,LOSER,
-FI,VenoSmooth,venosmooth,Launched,YES,VenoSmooth,1,2026-08-30,2026-08-30,,LOSER,
-FI,Vera,vera,Launched,YES,Vera FI,1,2026-08-16,2026-08-16,,LOSER,
-FI,Vigora,vigora,Launched,YES,Vigora FI,1,2026-09-19,2026-09-19,,LOSER,
-FI,ViroFlow,viroflow,Launched,YES,ViroFlow FI 2.0,20,2026-09-08,2026-09-27,ViroFlow FI 2.0,WINNER,
-FI,Visiora,visiora,Launched,YES,Visiora FI,1,2026-05-27,2026-05-27,,LOSER,
-FI,VitaSlim,vitaslim,Launched,YES,VitaSlim FI,1,2026-08-11,2026-08-11,,LOSER,
+market,funnel_name,normalized_key,funnel_status,tested,adspend_names,performance_tab,shopify_title,winner_loser,first_adspend_date,days_live
+FI,Arterio,arterio,Launched,YES,Arterio FI,Arterio FI,Arterio™,WINNER,2026-09-10,18
+FI,atriso,atriso,Launched,YES,Atriso FI,,Atriso™,LOSER,2026-08-06,2
+FI,Calora,calora,Launched,YES,Calora FI,,Calora™,LOSER,2026-06-19,1
+FI,Cervi,cervi,Launched,YES,Cervi FI,,Cervi™,LOSER,2026-09-04,1
+FI,cholina,cholina,Launched,YES,Cholina FI,,Cholina,LOSER,2026-06-04,1
+FI,circula,circula,Launched,YES,Circula FI,Circula,Circula™,WINNER,2026-06-03,3
+FI,Circuva,circuva,Launched,YES,Circuva FI,,Circuva™,LOSER,2026-09-16,1
+FI,ClarityX,clarityx,Launched,YES,ClarityX FI,,ClarityX™,LOSER,2026-09-20,2
+FI,Cleaso,cleaso,(empty),no,,,Cleaso,,,0
+FI,Collaga,collaga,Launched,YES,Collaga FI,,Collaga,LOSER,2026-06-09,1
+FI,cortisa,cortisa,Launched,YES,,,Cortisa™,LOSER,,0
+FI,cortisa2,cortisa2,Launched,YES,cortisa2 FI,,,LOSER,2026-09-18,1
+FI,damaxel,damaxel,Launched,YES,Damaxel FI,,Damaxel™,LOSER,2026-08-16,1
+FI,Dentasa,dentasa,Launched,YES,,,Dentasa™,LOSER,,0
+FI,DermaFlex,dermaflex,Launched,YES,DermaFlex FI | Dermaflex FI,,DermaFlex™,LOSER,2026-05-27,2
+FI,dermaflex2,dermaflex2,Launched,YES,,,,LOSER,,0
+FI,Dermalta,dermalta,Launched,YES,Dermalta FI,,Dermalta™,LOSER,2026-06-18,1
+FI,Dizzora,dizzora,Launched,YES,Dizzora FI - relaunch,,Dizzora™,LOSER,2026-07-05,1
+FI,Elora,elora,Launched,YES,Elora FI,,Elora™,LOSER,2026-09-20,1
+FI,Erelso,erelso,Launched,YES,Erelso FI,,Erelso™,LOSER,2026-07-26,4
+FI,Erocto,erocto,Launched,YES,Erocto FI,,Erocto,LOSER,2026-06-21,3
+FI,FeliZen,felizen,Launched,YES,FeliZen,,FeliZen™,LOSER,2026-08-30,1
+FI,Fibaxo,fibaxo,Launched,YES,Fibaxo FI | Fibaxo FI 2.0,,Fibaxo™,LOSER,2026-08-08,2
+FI,Firmify,firmify,Launched,YES,Firmify FI,,Firmify™,LOSER,2026-09-25,1
+FI,Firmora,firmora,Launched,YES,Firmora™ FI,,Firmora™,LOSER,2026-09-02,1
+FI,fitax,fitax,Launched,YES,Fitax FI,,Fitax™,LOSER,2026-09-24,1
+FI,Fixodant,fixodant,Launched,YES,Fixodant FI,,Fixodant™,LOSER,2026-08-28,1
+FI,Flexura,flexura,Launched,YES,Flexura FI,Flexura FI,Flexura™,WINNER,2026-09-22,6
+FI,Florina,florina,Launched,YES,,,Florina™,LOSER,,0
+FI,fodax,fodax,Launched,YES,fodax FI,,Fodax,LOSER,2026-08-25,1
+FI,Formala,formala,Launched,YES,Formala FI,,Formala™,LOSER,2026-06-11,1
+FI,Gastrox,gastrox,Launched,YES,Gastrox FI 2.0,Gastrox FI 2.0,Gastrox™,WINNER,2026-09-09,4
+FI,Glowila,glowila,Launched,YES,Glowila FI,,Glowila™,LOSER,2026-07-01,1
+FI,Glowina Oil,glowinaoil,Launched,YES,Glowina Oil FI,,GlowinaOil™,LOSER,2026-06-06,1
+FI,GoHydro,gohydro,Launched,YES,GoHydro FI,,GoHydro™,LOSER,2026-06-26,2
+FI,hardono,hardono,Launched,YES,Hardono FI,,Hardono,LOSER,2026-06-09,1
+FI,healara,healara,Launched,YES,Healara FI,,Healara™,LOSER,2026-06-21,16
+FI,HealRevive,healrevive,Launched,YES,HealRevive FI,,HealRevive™,LOSER,2026-08-15,1
+FI,hormbalance,hormbalance,Launched,YES,Hormbalance FI,,Hormbalance™,LOSER,2026-05-24,1
+FI,Hylon,hylon,Launched,YES,Hylon FI - 2.0,,Hylon™,LOSER,2026-07-02,9
+FI,Hylon2,hylon2,Launched,YES,Hylon2 FI,,,LOSER,2026-08-23,3
+FI,intifa,intifa,Launched,YES,intifa FI,,Intifa™,LOSER,2026-09-27,1
+FI,IntimaFit,intimafit,Launched,YES,,,IntimaFit™,LOSER,2026-08-09,1
+FI,itzora,itzora,Launched,YES,itzora FI - 2.,,Itzora,LOSER,2026-07-28,2
+FI,JointCalm,jointcalm,Launched,YES,JointCalm FI,,JointCalm™,LOSER,2026-08-14,1
+FI,Laxora,laxora,Launched,YES,Laxora FI,,Laxora™,LOSER,2026-09-20,1
+FI,liftala,liftala,Launched,YES,Liftala FI | Liftala FI – relaunch,Liftala,Liftala™,WINNER,2026-05-24,16
+FI,liftala2,liftala2,Launched,YES,Liftala2 FI,,,LOSER,2026-08-23,1
+FI,Litava,litava,Launched,YES,Litava FI,,Litava™ fi,LOSER,2026-06-07,1
+FI,lumifirm,lumifirm,Launched,YES,Lumifirm FI,,LumiFirm™,LOSER,2026-09-03,3
+FI,Lungaso,lungaso,Launched,YES,Lungaso FI,,Lungaso™,LOSER,2026-06-18,4
+FI,lutiva,lutiva,Launched,YES,,,Lutiva™,LOSER,,0
+FI,Luvida,luvida,Launched,YES,Luvida FI,,Luvida™,LOSER,2026-09-23,2
+FI,Lympha,lympha,(empty),no,,,Lympha™,,,0
+FI,mamax,mamax,Ready to launch,no,,,Mamax™,,,0
+FI,Mobilixa,mobilixa,Launched,YES,Mobilixa FI,Mobilixa,Mobilixa™ - fi,WINNER,2026-05-31,15
+FI,nailperf,nailperf,Launched,YES,Nailperf FI,,Nailperf™ | Nailperf™ -fi,LOSER,2026-05-30,1
+FI,Nervana,nervana,Launched,YES,Nervana FI,,Nervana™,LOSER,2026-09-13,1
+FI,Nervora,nervora,Launched,YES,Nervora FI,Nervora FI,Nervora™,WINNER,2026-08-27,32
+FI,Nervura,nervura,Launched,YES,Nervura FI,,Nervura™,LOSER,2026-09-13,1
+FI,Neurance,neurance,Launched,YES,Neurance FI | Neurance FI - 2.0,,Neurance™,LOSER,2026-06-24,5
+FI,Neurox,neurox,Launched,YES,Neurox FI,,Neurox™,LOSER,2026-09-13,4
+FI,Nicovo,nicovo,Launched,YES,Nicovo,,Nicovo,LOSER,2026-06-21,1
+FI,nicozina,nicozina,Launched,YES,Nicozina FI,,Nicozina™,LOSER,2026-06-16,1
+FI,Noella,noella,Launched,YES,Noella FI,,Noella™,LOSER,2026-06-12,1
+FI,Noraso,noraso,Launched,YES,Noraso FI,,Noraso,LOSER,2026-08-18,1
+FI,Noreux,noreux,Launched,YES,Noreux FI,,Noreux™,LOSER,2026-08-22,1
+FI,Nosita,nosita,Launched,YES,Nosita FI,,Nosita™,LOSER,2026-06-10,1
+FI,Optila,optila,Launched,YES,Optila FI,Optila,Optila™,WINNER,2026-06-10,7
+FI,Orident™,orident,Launched,YES,Orident™ FI,,Orident,LOSER,2026-08-13,1
+FI,Orivelle,orivelle,(empty),no,,,Orivelle,,,0
+FI,Orthix,orthix,Launched,YES,Orthix FI,,Orthix­™,LOSER,2026-08-09,1
+FI,oxona,oxona,Launched,YES,oxona FI,,Oxona,LOSER,2026-07-09,1
+FI,ozempa / Ozempa,ozempa,Launched,YES,Ozempa™ FI - relaunch | Ozempa™ FI - relaunch - 2.0 | ozempa FI,Ozempa,Ozempa,WINNER,2026-06-07,29
+FI,pawcol,pawcol,Launched,YES,pawcol™ FI,,Pawcol,LOSER,2026-07-11,1
+FI,pawox,pawox,Re-launch,YES,Pawox FI | Pawox SLS FI | pawox FI 2.0,pawox FI 2.0,Pawox™,WINNER,2026-08-16,23
+FI,Probita,probita,Launched,YES,Probita FI,,Probita™,LOSER,2026-06-14,1
+FI,profix,profix,Launched,YES,Profix FI | Profix FI - relaunch,,Profix™  - fi,LOSER,2026-05-28,2
+FI,Puffala,puffala,Launched,YES,Puffala FI,,Puffala™  FI | Puffala™ - SE,LOSER,2026-05-21,1
+FI,Refrair,refrair,Launched,YES,Refrair FI,,Refrair™,LOSER,2026-05-28,1
+FI,resigo,resigo,Launched,YES,Resigo FI,,Resigo™,LOSER,2026-07-05,1
+FI,resigo2,resigo2,Launched,YES,Resigo2 FI,,,LOSER,2026-08-23,1
+FI,Serenityx,serenityx,Launched,YES,Serenityx FI,,Serenityx™,LOSER,2026-09-11,1
+FI,Sileva,sileva,Launched,YES,Sileva FI,,Sileva,LOSER,2026-06-14,3
+FI,skinlifa,skinlifa,Launched,YES,Skinlifa FI,,Skinlifa™,LOSER,2026-06-02,1
+FI,skinosa,skinosa,Launched,YES,,,Skinosa,LOSER,,0
+FI,skinsa,skinsa,Launched,YES,,,Skinsa™,LOSER,,0
+FI,smokola / Smokola,smokola,Launched,YES,Smokola FI,,Smokola™,LOSER,2026-08-07,1
+FI,Sonix,sonix,Launched,YES,Sonix FI,,Sonix™,LOSER,2026-09-12,1
+FI,TanLux,tanlux,Launched,YES,TanLux FI,,TanLux SE,LOSER,2026-05-23,1
+FI,thorax,thorax,(empty),no,,,,,,0
+FI,tinnoxa,tinnoxa,Launched,YES,tinnoxa FI,,Tinnoxa™ - fi,LOSER,2026-06-07,1
+FI,vanix,vanix,Launched,YES,Vanix FI | Vanix FI 2.0 | Vanix FI 3.0,,Vanix,LOSER,2026-07-15,8
+FI,Vatyla,vatyla,Launched,YES,Vatyla™ FI,,Vatyla,LOSER,2026-07-10,1
+FI,Velmora™,velmora,Launched,YES,Velmora™ FI | Velmora™ FI 2.0,,Velmora,LOSER,2026-08-12,2
+FI,VenaFit,venafit,Launched,YES,VenaFit FI,,VenaFit™,LOSER,2026-09-19,1
+FI,VenoSmooth,venosmooth,Launched,YES,VenoSmooth,,VenoSmooth™,LOSER,2026-08-30,1
+FI,Vera,vera,Launched,YES,Vera FI,,Vera™,LOSER,2026-08-16,1
+FI,Vigora,vigora,Launched,YES,Vigora FI,,Vigora™,LOSER,2026-09-19,1
+FI,ViroFlow,viroflow,Launched,YES,ViroFlow FI 2.0,ViroFlow FI 2.0,ViroFlow™,WINNER,2026-09-08,20
+FI,Visiora,visiora,Launched,YES,Visiora FI,,Visiora™ FI,LOSER,2026-05-27,1
+FI,VitaSlim,vitaslim,Launched,YES,VitaSlim FI,,VitaSlim™,LOSER,2026-08-11,1

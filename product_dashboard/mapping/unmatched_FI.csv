@@ -1,2 +1,5 @@
-source,raw_value,normalized_key,rows,first_date,last_date,reason
-DAILY ADSPEND (FI),IntimaFix FI,intimafix,1,2026-08-09,2026-08-09,no FI funnel product with this base name
+source,raw_value,normalized_key,reason
+Funnel product without Shopify product,Hylon2,hylon2,"no Shopify product normalizes onto this name - revenue, orders and units stay empty"
+Funnel product without Shopify product,liftala2,liftala2,"no Shopify product normalizes onto this name - revenue, orders and units stay empty"
+Funnel product without Shopify product,resigo2,resigo2,"no Shopify product normalizes onto this name - revenue, orders and units stay empty"
+Funnel product without Shopify product,cortisa2,cortisa2,"no Shopify product normalizes onto this name - revenue, orders and units stay empty"

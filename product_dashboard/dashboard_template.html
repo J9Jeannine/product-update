@@ -1,0 +1,584 @@
+<title>Noveliska Product Cockpit</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    color-scheme:light;
+    --ground:#EAF2FB;
+    --surface:#FFFFFF;
+    --surface-2:#F2F7FD;
+    --surface-3:#E2EDF9;
+    --line:#C7DCF1;
+    --line-soft:#DDEAF7;
+    --ink:#0B2B4C;
+    --ink-2:#3E618A;
+    --ink-3:#7794B6;
+    --accent:#2E86DE;
+    --accent-soft:rgba(46,134,222,.12);
+    --accent-ink:#1B5FA8;
+    --cyan:#2FAFC4;
+    --good:#0E7A55;
+    --good-soft:rgba(14,122,85,.12);
+    --bad:#C22F45;
+    --bad-soft:rgba(194,47,69,.12);
+    --amber:#9C6A12;
+    --radius:16px;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sans:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      color-scheme:dark;
+      --ground:#081524;
+      --surface:#0E1F33;
+      --surface-2:#132840;
+      --surface-3:#1A3350;
+      --line:#23415F;
+      --line-soft:#1A3049;
+      --ink:#E6F0FA;
+      --ink-2:#A6C0DA;
+      --ink-3:#7091B4;
+      --accent:#5EAEF5;
+      --accent-soft:rgba(94,174,245,.16);
+      --accent-ink:#9FD0FF;
+      --cyan:#5FD8E8;
+      --good:#33CE96;
+      --good-soft:rgba(51,206,150,.15);
+      --bad:#FF708C;
+      --bad-soft:rgba(255,112,140,.15);
+      --amber:#E8B85C;
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme:dark;
+    --ground:#081524;
+    --surface:#0E1F33;
+    --surface-2:#132840;
+    --surface-3:#1A3350;
+    --line:#23415F;
+    --line-soft:#1A3049;
+    --ink:#E6F0FA;
+    --ink-2:#A6C0DA;
+    --ink-3:#7091B4;
+    --accent:#5EAEF5;
+    --accent-soft:rgba(94,174,245,.16);
+    --accent-ink:#9FD0FF;
+    --cyan:#5FD8E8;
+    --good:#33CE96;
+    --good-soft:rgba(51,206,150,.15);
+    --bad:#FF708C;
+    --bad-soft:rgba(255,112,140,.15);
+    --amber:#E8B85C;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1100px 520px at 10% -14%, rgba(46,134,222,.16), transparent 62%),
+      radial-gradient(880px 460px at 94% -4%, rgba(47,175,196,.11), transparent 58%),
+      var(--ground);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:15px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:0 56px}
+  .num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .pos{color:var(--good)}
+  .neg{color:var(--bad)}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+
+  .topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;
+    background:color-mix(in srgb, var(--ground) 88%, transparent);
+    backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft)}
+  .topbar-in{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:14px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:11px;margin-right:auto}
+  .mark{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;flex:none;
+    background:linear-gradient(145deg,var(--accent),#6FC0F2);box-shadow:0 6px 18px rgba(46,134,222,.3)}
+  .brand h1{font-size:16px;font-weight:800;margin:0;letter-spacing:-.015em}
+  .brand p{margin:0;font-size:11px;color:var(--ink-3);letter-spacing:.09em;text-transform:uppercase;font-weight:700}
+  .status{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-2);
+    background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--good);flex:none;
+    box-shadow:0 0 0 4px var(--good-soft)}
+  .sheetlink{font-size:12.5px;font-weight:700;color:var(--accent-ink);text-decoration:none;
+    background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 14px}
+  .sheetlink:hover{border-color:var(--accent)}
+
+  .rail{margin-top:20px;display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+  .chip{flex:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:var(--ink-2);
+    background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:9px 15px;
+    transition:border-color .15s,color .15s,background .15s}
+  .chip:hover{color:var(--ink);border-color:var(--accent)}
+  .chip[aria-selected="true"]{color:#fff;background:linear-gradient(140deg,var(--accent),#57A9EE);
+    border-color:transparent;box-shadow:0 8px 20px rgba(46,134,222,.24)}
+
+  .kpis{margin-top:18px;display:grid;gap:10px;grid-template-columns:repeat(5,1fr)}
+  .kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 15px}
+  .kpi.hero{grid-column:span 2;border-color:#9FC7EC;
+    background:linear-gradient(150deg,var(--accent-soft),transparent 60%),var(--surface)}
+  .kpi .lbl{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:800}
+  .kpi .val{font-family:var(--mono);font-size:23px;font-weight:600;margin-top:7px;letter-spacing:-.02em}
+  .kpi.hero .val{font-size:38px}
+  .kpi .sub{font-size:11.5px;color:var(--ink-3);margin-top:4px}
+  .kpi .meter{margin-top:10px;height:5px;border-radius:999px;background:var(--surface-3);overflow:hidden}
+  .kpi .meter i{display:block;height:100%;border-radius:999px;background:var(--accent)}
+
+  .card{margin-top:22px;background:var(--surface);border:1px solid var(--line);
+    border-radius:var(--radius);padding:18px 18px 16px}
+  .card-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .card-head h2{font-size:14px;font-weight:800;margin:0;letter-spacing:-.01em}
+  .card-head .hint{font-size:11.5px;color:var(--ink-3);margin-left:auto}
+  .seg{display:flex;gap:2px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:2px}
+  .seg button{font-family:inherit;font-size:12px;font-weight:700;color:var(--ink-3);cursor:pointer;
+    background:none;border:0;border-radius:8px;padding:5px 12px}
+  .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);
+    box-shadow:0 1px 3px rgba(11,43,76,.12)}
+
+  .scroller{overflow-x:auto;margin:0 -18px;padding:0 18px}
+  table{border-collapse:collapse;width:100%;min-width:680px}
+  th{font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-weight:800;
+    text-align:right;padding:0 10px 9px;white-space:nowrap;border-bottom:1px solid var(--line)}
+  th:first-child{text-align:left;padding-left:12px}
+  td{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px;text-align:right;
+    padding:9px 10px;border-bottom:1px solid var(--line-soft);white-space:nowrap}
+  td:first-child{text-align:left;font-family:var(--sans);font-weight:700;padding-left:12px}
+  tbody tr.clickable{cursor:pointer;transition:background .12s}
+  tbody tr.clickable:hover{background:var(--surface-2)}
+  tbody tr[aria-current="true"]{background:var(--accent-soft)}
+  tbody tr.win td:first-child{box-shadow:inset 3px 0 0 var(--good)}
+  tbody tr.lose td:first-child{box-shadow:inset 3px 0 0 var(--bad)}
+  td.empty{color:var(--ink-3)}
+  tfoot td{font-weight:700;border-top:1px solid var(--line);border-bottom:0;padding-top:12px}
+  tfoot td:first-child{font-family:var(--sans)}
+  .pill{font-family:var(--sans);font-size:10.5px;font-weight:800;letter-spacing:.05em;border-radius:999px;
+    padding:2px 9px;display:inline-block}
+  .pill.win{background:var(--good-soft);color:var(--good)}
+  .pill.lose{background:var(--bad-soft);color:var(--bad)}
+
+  .picker{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+  .picker input{flex:1 1 200px;min-width:0;font-family:inherit;font-size:13.5px;color:var(--ink);
+    background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
+  .picker input:focus{border-color:var(--accent)}
+  .picker select{font-family:inherit;font-size:13.5px;font-weight:600;color:var(--ink);
+    background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;max-width:100%}
+
+  .prodhead{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;margin-bottom:6px}
+  .prodhead h3{margin:0;font-size:22px;font-weight:800;letter-spacing:-.02em}
+  .prodhead .meta{font-size:12px;color:var(--ink-3);margin-top:3px}
+  .mini{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:14px 0 18px}
+  .mini div{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+  .mini .lbl{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:800}
+  .mini .v{font-family:var(--mono);font-size:17px;font-weight:600;margin-top:4px}
+
+  .chart-wrap{position:relative;margin-bottom:6px}
+  .chart-wrap svg{display:block;width:100%;height:auto;overflow:visible}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--ink-2);margin-top:8px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+
+  .notice{margin-top:14px;display:flex;gap:11px;align-items:flex-start;border:1px solid var(--line);
+    border-left:3px solid var(--amber);background:var(--surface);border-radius:12px;padding:12px 14px;
+    font-size:13px;color:var(--ink-2)}
+  .notice strong{color:var(--ink);font-weight:800;display:block;margin-bottom:2px}
+  .foot{margin-top:26px;font-size:11.5px;color:var(--ink-3);display:flex;gap:8px;flex-wrap:wrap}
+  .foot a{color:var(--ink-2)}
+
+  @media (max-width:860px){
+    .kpis{grid-template-columns:repeat(2,1fr)}
+    .kpi.hero{grid-column:span 2}
+    .kpi.hero{grid-column:span 2}
+    .mini{grid-template-columns:repeat(2,1fr)}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">
+      <span class="mark" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M2 13.2 6.1 8.4l3.2 2.6L16 3" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M11.6 3H16v4.4" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <div>
+        <h1>Noveliska Product Cockpit</h1>
+        <p>Tested products &middot; per market &middot; per day</p>
+      </div>
+    </div>
+    <div class="status"><span class="dot"></span><span id="statustext">&mdash;</span></div>
+    <a class="sheetlink" id="sheetlink" href="#" target="_blank" rel="noopener">Open the sheet</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="rail" id="rail" aria-label="Choose market"></nav>
+
+  <section class="kpis" id="kpis" aria-label="Winner rate"></section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2 id="listtitle">Winners</h2>
+      <div class="seg" role="group" aria-label="Which products to list">
+        <button type="button" data-group="winners" aria-pressed="true">Winners</button>
+        <button type="button" data-group="losers" aria-pressed="false">Losers</button>
+        <button type="button" data-group="all" aria-pressed="false">All</button>
+      </div>
+      <span class="hint">Click a row to open the product</span>
+    </div>
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Product</th>
+            <th scope="col">Launch</th>
+            <th scope="col">Days live</th>
+            <th scope="col">Ad spend</th>
+            <th scope="col">Revenue</th>
+            <th scope="col">Orders</th>
+            <th scope="col">ROAS</th>
+            <th scope="col">CPA</th>
+            <th scope="col">Result</th>
+          </tr>
+        </thead>
+        <tbody id="listbody"></tbody>
+        <tfoot id="listfoot"></tfoot>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Product by day</h2>
+      <span class="hint">ROAS = Shopify revenue / ad spend</span>
+    </div>
+    <div class="picker">
+      <input type="search" id="search" placeholder="Search a product" aria-label="Search a product">
+      <select id="productselect" aria-label="Choose a product"></select>
+    </div>
+    <div id="productpanel"></div>
+  </section>
+
+  <div class="foot">
+    <span id="footsrc"></span>
+  </div>
+</div>
+
+<script type="application/json" id="dashboard-data">__DASHBOARD_DATA__</script>
+<script>
+(function(){
+  "use strict";
+  var DATA = JSON.parse(document.getElementById("dashboard-data").textContent);
+  var codes = Object.keys(DATA.markets);
+  var state = {market: codes[0] || null, group: "winners", product: null};
+
+  // Open on the market's biggest winner rather than on whatever happens to be
+  // first: that is the product anyone opening this page looks at first.
+  function defaultProduct(code){
+    var products = DATA.markets[code].products;
+    var ranked = products.filter(function(p){ return p.winner; })
+      .sort(function(a, b){ return (b.total_spend || 0) - (a.total_spend || 0); });
+    var pick = ranked[0] || products[0];
+    return pick ? pick.key : null;
+  }
+  if (state.market) state.product = defaultProduct(state.market);
+
+  var eur = new Intl.NumberFormat("en-GB", {style:"currency", currency:"EUR", maximumFractionDigits:2});
+  var num = new Intl.NumberFormat("en-GB", {maximumFractionDigits:2, minimumFractionDigits:2});
+  var int = new Intl.NumberFormat("en-GB");
+
+  function has(v){ return v !== null && v !== undefined && v !== ""; }
+  function money(v){ return has(v) ? eur.format(v) : "—"; }
+  function ratio(v){ return has(v) ? num.format(v) : "—"; }
+  function count(v){ return has(v) ? int.format(v) : "—"; }
+  function pct(v){ return has(v) ? (v*100).toFixed(1) + "%" : "—"; }
+  function cell(text, extra){
+    var td = document.createElement("td");
+    td.textContent = text;
+    if (text === "—") td.classList.add("empty");
+    if (extra) td.className += " " + extra;
+    return td;
+  }
+  function market(){ return DATA.markets[state.market]; }
+
+  function renderRail(){
+    var rail = document.getElementById("rail");
+    rail.textContent = "";
+    codes.forEach(function(code){
+      var b = document.createElement("button");
+      b.className = "chip";
+      b.type = "button";
+      b.setAttribute("role", "tab");
+      b.setAttribute("aria-selected", String(code === state.market));
+      b.textContent = code + " · " + DATA.markets[code].name;
+      b.addEventListener("click", function(){
+        state.market = code; state.product = defaultProduct(code); renderAll();
+      });
+      rail.appendChild(b);
+    });
+  }
+
+  function renderKpis(){
+    var s = market().stats;
+    var box = document.getElementById("kpis");
+    box.textContent = "";
+    var hero = document.createElement("div");
+    hero.className = "kpi hero";
+    hero.innerHTML = '<div class="lbl">Winner rate</div>' +
+      '<div class="val">' + pct(s.rate) + '</div>' +
+      '<div class="sub">' + s.winners + ' of ' + s.tested + ' tested products became winners</div>' +
+      '<div class="meter"><i style="width:' + ((s.rate || 0) * 100).toFixed(1) + '%"></i></div>';
+    box.appendChild(hero);
+    [["Tested", s.tested], ["Winners", s.winners], ["Losers", s.losers]].forEach(function(pair){
+      var d = document.createElement("div");
+      d.className = "kpi";
+      d.innerHTML = '<div class="lbl">' + pair[0] + '</div><div class="val">' + pair[1] + '</div>';
+      box.appendChild(d);
+    });
+  }
+
+  function groupProducts(){
+    var products = market().products;
+    if (state.group === "winners") return products.filter(function(p){ return p.winner; });
+    if (state.group === "losers") return products.filter(function(p){ return !p.winner; });
+    return products.slice();
+  }
+
+  function renderList(){
+    var rows = groupProducts().slice().sort(function(a, b){
+      return (b.total_spend || 0) - (a.total_spend || 0);
+    });
+    document.getElementById("listtitle").textContent =
+      state.group === "winners" ? "Winners" : state.group === "losers" ? "Losers" : "All tested products";
+    var body = document.getElementById("listbody");
+    body.textContent = "";
+    rows.forEach(function(p){
+      var tr = document.createElement("tr");
+      tr.className = "clickable " + (p.winner ? "win" : "lose");
+      tr.setAttribute("aria-current", String(p.key === state.product));
+      tr.appendChild(cell(p.name));
+      tr.appendChild(cell(p.launch_date || "—"));
+      tr.appendChild(cell(count(p.days_live)));
+      tr.appendChild(cell(money(p.total_spend)));
+      tr.appendChild(cell(money(p.total_revenue)));
+      tr.appendChild(cell(count(p.total_orders)));
+      var roas = cell(ratio(p.roas));
+      if (has(p.roas)) roas.classList.add(p.roas >= 1 ? "pos" : "neg");
+      tr.appendChild(roas);
+      tr.appendChild(cell(money(p.cpa)));
+      var result = document.createElement("td");
+      result.innerHTML = '<span class="pill ' + (p.winner ? "win" : "lose") + '">' +
+        (p.winner ? "WINNER" : "LOSER") + "</span>";
+      tr.appendChild(result);
+      tr.addEventListener("click", function(){
+        state.product = p.key;
+        document.getElementById("productselect").value = p.key;
+        renderList(); renderProduct();
+        document.getElementById("productpanel").scrollIntoView({behavior:"smooth", block:"start"});
+      });
+      body.appendChild(tr);
+    });
+    var sum = rows.reduce(function(acc, p){
+      acc.spend += p.total_spend || 0;
+      acc.revenue += p.total_revenue || 0;
+      acc.orders += p.total_orders || 0;
+      return acc;
+    }, {spend:0, revenue:0, orders:0});
+    var foot = document.getElementById("listfoot");
+    foot.textContent = "";
+    var tr = document.createElement("tr");
+    tr.appendChild(cell(rows.length + " products"));
+    tr.appendChild(cell(""));
+    tr.appendChild(cell(""));
+    tr.appendChild(cell(money(sum.spend)));
+    tr.appendChild(cell(money(sum.revenue)));
+    tr.appendChild(cell(count(sum.orders)));
+    tr.appendChild(cell(sum.spend ? ratio(sum.revenue / sum.spend) : "—"));
+    tr.appendChild(cell(sum.orders ? money(sum.spend / sum.orders) : "—"));
+    tr.appendChild(cell(""));
+    foot.appendChild(tr);
+  }
+
+  function renderSelect(){
+    var select = document.getElementById("productselect");
+    var term = document.getElementById("search").value.trim().toLowerCase();
+    var products = market().products.filter(function(p){
+      return !term || p.name.toLowerCase().indexOf(term) >= 0;
+    });
+    select.textContent = "";
+    products.forEach(function(p){
+      var o = document.createElement("option");
+      o.value = p.key;
+      o.textContent = (p.winner ? "★ " : "") + p.name + "  ·  " + (p.launch_date || "no ad spend");
+      select.appendChild(o);
+    });
+    if (!products.some(function(p){ return p.key === state.product; })) {
+      state.product = products.length ? products[0].key : null;
+    }
+    if (state.product) select.value = state.product;
+  }
+
+  function chart(days){
+    var W = 980, H = 220, padL = 52, padR = 12, padT = 12, padB = 26;
+    var inner = W - padL - padR, innerH = H - padT - padB;
+    var max = 0;
+    days.forEach(function(d){
+      max = Math.max(max, d.Revenue || 0, d["Ad Spend"] || 0);
+    });
+    if (max <= 0) max = 1;
+    var step = inner / Math.max(days.length, 1);
+    var bw = Math.max(2, Math.min(18, step / 2 - 2));
+    var svg = ['<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Revenue and ad spend per day">'];
+    [0, 0.5, 1].forEach(function(f){
+      var y = padT + innerH - f * innerH;
+      svg.push('<line x1="' + padL + '" y1="' + y.toFixed(1) + '" x2="' + (W - padR) +
+        '" y2="' + y.toFixed(1) + '" stroke="var(--line-soft)" stroke-width="1"/>');
+      svg.push('<text x="' + (padL - 8) + '" y="' + (y + 4).toFixed(1) +
+        '" text-anchor="end" font-size="10" font-family="var(--mono)" fill="var(--ink-3)">' +
+        Math.round(max * f) + '</text>');
+    });
+    days.forEach(function(d, i){
+      var x = padL + i * step + step / 2;
+      var rev = d.Revenue || 0, spend = d["Ad Spend"] || 0;
+      var hr = (rev / max) * innerH, hs = (spend / max) * innerH;
+      svg.push('<rect x="' + (x - bw - 1).toFixed(1) + '" y="' + (padT + innerH - hr).toFixed(1) +
+        '" width="' + bw.toFixed(1) + '" height="' + Math.max(hr, 0).toFixed(1) +
+        '" rx="2" fill="var(--accent)"><title>' + d.Date + ' revenue ' + money(d.Revenue) + '</title></rect>');
+      svg.push('<rect x="' + (x + 1).toFixed(1) + '" y="' + (padT + innerH - hs).toFixed(1) +
+        '" width="' + bw.toFixed(1) + '" height="' + Math.max(hs, 0).toFixed(1) +
+        '" rx="2" fill="var(--cyan)"><title>' + d.Date + ' ad spend ' + money(d["Ad Spend"]) + '</title></rect>');
+    });
+    if (days.length) {
+      svg.push('<text x="' + padL + '" y="' + (H - 8) + '" font-size="10" font-family="var(--mono)" fill="var(--ink-3)">' + days[0].Date + '</text>');
+      svg.push('<text x="' + (W - padR) + '" y="' + (H - 8) + '" text-anchor="end" font-size="10" font-family="var(--mono)" fill="var(--ink-3)">' + days[days.length - 1].Date + '</text>');
+    }
+    svg.push('</svg>');
+    return svg.join("");
+  }
+
+  var DAY_COLS = [
+    ["Date", "text"], ["Revenue", "money"], ["Orders", "count"], ["Units", "count"],
+    ["Refunds", "money"], ["Ad Spend", "money"], ["ROAS", "roas"], ["CPA", "money"],
+    ["Meta Purchases", "count"], ["Meta CPA", "money"], ["Meta CPM", "money"],
+    ["Meta CTR", "pct"], ["Meta CPC", "money"], ["Meta ROAS", "ratio"],
+    ["Meta Frequency", "ratio"]
+  ];
+
+  function format(kind, value){
+    if (!has(value)) return "—";
+    if (kind === "money") return money(value);
+    if (kind === "count") return count(value);
+    if (kind === "ratio" || kind === "roas") return ratio(value);
+    if (kind === "pct") return (value * 100).toFixed(2) + "%";
+    return String(value);
+  }
+
+  function renderProduct(){
+    var panel = document.getElementById("productpanel");
+    var p = market().products.filter(function(x){ return x.key === state.product; })[0];
+    panel.textContent = "";
+    if (!p) {
+      panel.innerHTML = '<p style="color:var(--ink-3)">No product selected.</p>';
+      return;
+    }
+    var head = document.createElement("div");
+    head.className = "prodhead";
+    head.innerHTML = '<div><h3>' + p.name + ' <span class="pill ' + (p.winner ? "win" : "lose") + '">' +
+      (p.winner ? "WINNER" : "LOSER") + '</span></h3>' +
+      '<div class="meta">' + p.status + ' · ad spend as &ldquo;' +
+      (p.adspend_names.join(", ") || "—") + '&rdquo;' +
+      (p.shopify_titles.length ? ' · Shopify &ldquo;' + p.shopify_titles.join(", ") + '&rdquo;' : "") +
+      (p.performance_tab ? ' · Product Performance tab &ldquo;' + p.performance_tab + '&rdquo;' : "") +
+      '</div></div>';
+    panel.appendChild(head);
+
+    var mini = document.createElement("div");
+    mini.className = "mini";
+    [["Ad spend", money(p.total_spend)], ["Revenue", money(p.total_revenue)],
+     ["ROAS", ratio(p.roas)], ["CPA", money(p.cpa)]].forEach(function(pair){
+      var d = document.createElement("div");
+      d.innerHTML = '<div class="lbl">' + pair[0] + '</div><div class="v">' + pair[1] + '</div>';
+      mini.appendChild(d);
+    });
+    panel.appendChild(mini);
+
+    if (p.days.length) {
+      var wrap = document.createElement("div");
+      wrap.className = "chart-wrap";
+      wrap.innerHTML = chart(p.days);
+      panel.appendChild(wrap);
+      var legend = document.createElement("div");
+      legend.className = "legend";
+      legend.innerHTML = '<span><i style="background:var(--accent)"></i>Revenue</span>' +
+        '<span><i style="background:var(--cyan)"></i>Ad spend</span>';
+      panel.appendChild(legend);
+    }
+
+    var scroller = document.createElement("div");
+    scroller.className = "scroller";
+    scroller.style.marginTop = "16px";
+    var table = document.createElement("table");
+    var thead = document.createElement("thead");
+    var hr = document.createElement("tr");
+    DAY_COLS.forEach(function(col){
+      var th = document.createElement("th");
+      th.scope = "col";
+      th.textContent = col[0];
+      hr.appendChild(th);
+    });
+    thead.appendChild(hr);
+    table.appendChild(thead);
+    var tbody = document.createElement("tbody");
+    p.days.forEach(function(day){
+      var tr = document.createElement("tr");
+      DAY_COLS.forEach(function(col){
+        var td = cell(format(col[1], day[col[0]]));
+        if (col[1] === "roas" && has(day[col[0]])) {
+          td.classList.add(day[col[0]] >= 1 ? "pos" : "neg");
+        }
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    if (!p.days.length) {
+      var note = document.createElement("p");
+      note.style.color = "var(--ink-3)";
+      note.textContent = "This product has no row in DAILY ADSPEND, so it has no time series yet.";
+      panel.appendChild(note);
+    }
+    scroller.appendChild(table);
+    panel.appendChild(scroller);
+  }
+
+  function renderAll(){
+    renderRail(); renderKpis(); renderSelect(); renderList(); renderProduct();
+  }
+
+  document.querySelectorAll('.seg button').forEach(function(b){
+    b.addEventListener("click", function(){
+      state.group = b.dataset.group;
+      document.querySelectorAll('.seg button').forEach(function(o){
+        o.setAttribute("aria-pressed", String(o === b));
+      });
+      renderList();
+    });
+  });
+  document.getElementById("search").addEventListener("input", function(){
+    renderSelect(); renderProduct();
+  });
+  document.getElementById("productselect").addEventListener("change", function(e){
+    state.product = e.target.value;
+    renderList(); renderProduct();
+  });
+
+  document.getElementById("statustext").textContent = "Data as of " + DATA.generated_at.replace("T", " ");
+  document.getElementById("sheetlink").href = DATA.spreadsheet_url;
+  document.getElementById("footsrc").innerHTML =
+    'Source: PRODUCT DASHBOARD - NOVELISKA (Google Sheets) · built from the Funnel Sheet, ' +
+    'DAILY ADSPEND, Product Performance and the Shopify Admin API. ' +
+    'Empty cells mean no source delivered a value — nothing is estimated.';
+  renderAll();
+})();
+</script>
