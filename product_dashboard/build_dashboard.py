@@ -29,6 +29,7 @@ import sources            # noqa: E402
 import shopify_api        # noqa: E402
 import sheet_writer       # noqa: E402
 import cogs as cogs_module   # noqa: E402
+import images as images_module   # noqa: E402
 from model import build_series, winner_rate   # noqa: E402
 from normalize import normalize               # noqa: E402
 
@@ -228,6 +229,14 @@ def run(args):
                               start.isoformat(), catalog, product_cogs)
         rows, unmatched = write_mapping(market, products, adspend_log, winners,
                                         catalog, sold_titles, overrides, series)
+
+        # Always take the photo: every product the dashboard shows gets its
+        # real Shopify image, including one that launched today.
+        try:
+            photos, photo_notes = images_module.fetch(
+                store, DATA_DIR, wanted=[s.key for s in series])
+        except Exception as error:                      # noqa: BLE001
+            photos, photo_notes = {}, ["photos unavailable: %s" % error]
         stats = winner_rate(series)
         market_blocks.append((market, spec["name"], series))
 
@@ -250,6 +259,7 @@ def run(args):
             "disputes_counted": refund_log["disputes_counted"],
             "refund_notes": refund_log["notes"][:20],
             "cogs_notes": cogs_notes,
+            "photo_notes": photo_notes,
             "unmatched": unmatched,
             "cross_check": cross_check(store_totals, series, 2),
         }
@@ -264,6 +274,7 @@ def run(args):
                 "total_orders": item.total_orders, "roas": item.roas, "cpa": item.cpa,
                 "adspend_names": item.adspend_names,
                 "shopify_titles": item.shopify_titles,
+                "image": photos.get(item.key),
                 "days": item.days,
             } for item in series],
         }
@@ -335,6 +346,8 @@ def print_report(report):
             print("      %s" % note)
         for note in block.get("cogs_notes", []):
             print("      cogs: %s" % note)
+        for note in block.get("photo_notes", []):
+            print("      photo: %s" % note)
         print("  cross-check against Shopify, same day, same revenue definition:")
         for row in block["cross_check"]:
             print("      %s  dashboard %9.2f | all products %9.2f (%+.2f) | "
