@@ -1,23 +1,43 @@
 # -*- coding: utf-8 -*-
 """Per-product, per-day COGS in EUR from DropshippingLite (ns-client AI API).
 
-Same method as pnl-KIZORA/scripts/sync_cogs.py, one level finer:
+COGS = product cost + shipping, both as the portal invoices them.
 
-    per order    sum of its line item costs + shipping ONCE (the largest line);
-                 the API returns one row per product, each carrying the full
-                 shipping, but the portal charges collected shipping once
-    per invoice  scale that invoice's orders so their sum equals the real
-                 invoice total; a factor further than 50 % from 1 is ignored
-                 and the estimate kept
-    per product  split the order across its products by their share of item cost
-    then         USD -> EUR at that day's rate
+    product cost  each row's total_item_cost, exactly as delivered
+    shipping      each invoice's shipping is its total_cost minus the product
+                  costs of its rows; that amount is split onto the rows
+    per product   the rows of that product, dated by their order
+    then          USD -> EUR at that day's rate
+
+The API returns one row per product line, each with the shipping that line
+would cost on its own (`shipping_cost`). The warehouse ships everything that
+carries the same tracking number as one parcel and charges one base fee for
+it, so an invoice comes in below the sum of its rows by one base fee for
+every extra row in a shared parcel (checked on all 115 Noveliska invoices up
+to 4 Oct 2026: 109 match to the cent; the other six are a rate change in late
+June and small adjustments of a few dollars).
+The split follows that:
+
+    1. a parcel of k rows gets (k - 1) shares of the invoice's saving, never
+       more than all but its dearest row; within the parcel the saving is
+       split by the rows' own shipping
+    2. whatever is left (a credit or a rate change on the invoice, or a
+       saving with no shared parcel) goes onto every row of the invoice by
+       its share of shipping
+
+So every invoice adds up to its total to the cent, and a parcel's saving
+stays with the products that were in it. A row with no invoice yet keeps
+its own shipping_cost until the invoice arrives; the nightly re-pull of the
+last 7 days replaces it.
 
 Dates are the order's date in the shop's timezone, exactly as the revenue is
 dated. The API timestamps are UTC and Helsinki is three hours ahead, so a
 late-evening order otherwise lands on the day before.
 
-Checked on 2026-10-05 against the values already in the dashboard:
-Nervora 27.08. 84.54 vs 84.53, Nervora 28.08. 70.84 vs 70.84.
+Checked against invoice MU11341abb0b27bafea (4 Oct 2026, $211.84): every
+invoice adds up to its total; ViroFlow's 18.16 shipping is the invoice's
+Sensitive line to the cent; the 13.26 saving sits on the two shared parcels,
+#NOVSE2186 (Lympha) and #NOVSE2184/2185 (FlexiVera).
 """
 
 import collections
@@ -33,7 +53,6 @@ from normalize import normalize
 ORDERS_ENDPOINT = "/api/ai/v1/orders"
 INVOICES_ENDPOINT = "/api/ai/v1/invoice_orders"
 PER_PAGE = 100
-MAX_SCALE_DRIFT = 0.5          # beyond this the invoice factor is implausible
 FX_URL = "https://api.frankfurter.dev/v1/{start}..{end}?base=USD&symbols=EUR"
 
 
@@ -132,6 +151,41 @@ def _rates(start, end):
     return out
 
 
+def allocate_invoice(rows, total, notes, number):
+    """Set row["ship_final"] so the rows add up to the invoice total. See the
+    module docstring for the rule."""
+    pool = total - sum(r["item"] for r in rows)
+    raw = sum(r["ship"] for r in rows)
+    saving = raw - pool
+    if abs(saving) < 0.005:
+        return
+    parcels = collections.defaultdict(list)
+    for row in rows:
+        parcels[row["parcel"]].append(row)
+    shared = [p for p in parcels.values() if len(p) > 1]
+    extra = sum(len(p) - 1 for p in shared)
+    left = saving
+    if saving > 0 and extra:
+        per_extra = saving / extra
+        for parcel in shared:
+            own = sum(r["ship"] for r in parcel)
+            cap = own - max(r["ship"] for r in parcel)
+            cut = min(per_extra * (len(parcel) - 1), cap)
+            for row in parcel:
+                row["ship_final"] -= cut * (row["ship"] / own if own else 1.0 / len(parcel))
+            left -= cut
+    if abs(left) >= 0.005:
+        if raw <= 0:
+            notes.append("invoice %s: %.2f of shipping and no row to carry it"
+                         % (number, -left))
+            return
+        for row in rows:
+            row["ship_final"] -= left * row["ship"] / raw
+        if abs(left) >= 0.5:
+            notes.append("invoice %s: %+.2f not explained by shared parcels, "
+                         "spread over its rows by shipping" % (number, -left))
+
+
 def fetch(domain, timezone, log=None):
     """-> ({normalized product key: {date: EUR}}, notes)."""
     tz = zoneinfo.ZoneInfo(timezone)
@@ -140,7 +194,7 @@ def fetch(domain, timezone, log=None):
     orders = _all(base, key, secret, ORDERS_ENDPOINT, "orders")
     invoices = _all(base, key, secret, INVOICES_ENDPOINT, "orders")
 
-    groups = collections.defaultdict(list)
+    rows = []
     hidden = 0
     for order in orders:
         # 'hidden' orders are never invoiced, so they carry no cost.
@@ -153,45 +207,35 @@ def fetch(domain, timezone, log=None):
         if not date:
             continue
         name = (order.get("source_order_name") or order.get("order_number") or "").strip()
-        groups[(date, name, (order.get("invoice_number") or "").strip())].append({
+        rows.append({
+            "date": date,
+            "invoice": (order.get("invoice_number") or "").strip(),
+            # One parcel = one tracking number; before it has one, its order.
+            "parcel": (order.get("tracking_number") or "").strip() or name,
             "title": (order.get("title") or order.get("product_title") or "").strip(),
             "item": _number(order.get("total_item_cost")),
             "ship": _number(order.get("shipping_cost")),
         })
-
-    estimate = {k: sum(r["item"] for r in rows) + max(r["ship"] for r in rows)
-                for k, rows in groups.items()}
+    for row in rows:
+        row["ship_final"] = row["ship"]
 
     totals = {(i.get("invoice_number") or "").strip(): _number(i.get("total_cost"))
               for i in invoices}
     by_invoice = collections.defaultdict(list)
-    for k in estimate:
-        if k[2]:
-            by_invoice[k[2]].append(k)
-    scaled = 0
-    for number, keys in by_invoice.items():
-        target = totals.get(number)
-        if not target:
+    for row in rows:
+        if row["invoice"]:
+            by_invoice[row["invoice"]].append(row)
+    invoiced = 0
+    for number, inv_rows in by_invoice.items():
+        if number not in totals:
             continue
-        current = sum(estimate[k] for k in keys)
-        if current <= 0:
-            continue
-        factor = target / current
-        if abs(factor - 1) > MAX_SCALE_DRIFT:
-            notes.append("invoice %s: factor %.2f is implausible, estimate kept"
-                         % (number, factor))
-            continue
-        for k in keys:
-            estimate[k] *= factor
-        scaled += len(keys)
+        invoiced += len(inv_rows)
+        allocate_invoice(inv_rows, totals[number], notes, number)
+    uninvoiced = len(rows) - invoiced
 
     usd = collections.defaultdict(lambda: collections.defaultdict(float))
-    for (date, name, invoice), rows in groups.items():
-        value = estimate[(date, name, invoice)]
-        item_total = sum(r["item"] for r in rows)
-        for row in rows:
-            share = (row["item"] / item_total) if item_total > 0 else (1.0 / len(rows))
-            usd[normalize(row["title"])][date] += value * share
+    for row in rows:
+        usd[normalize(row["title"])][row["date"]] += row["item"] + row["ship_final"]
 
     days = sorted({d for product in usd.values() for d in product})
     if not days:
@@ -219,8 +263,8 @@ def fetch(domain, timezone, log=None):
             out[product] = converted
     if unconverted:
         notes.append("no USD/EUR rate for: %s" % ", ".join(sorted(unconverted)[:10]))
-    notes.append("orders %d (invoice-scaled %d, hidden skipped %d), products %d"
-                 % (len(groups), scaled, hidden, len(out)))
+    notes.append("rows %d (invoiced %d, not yet invoiced %d, hidden skipped %d), "
+                 "products %d" % (len(rows), invoiced, uninvoiced, hidden, len(out)))
     if log is not None:
         log.extend(notes)
     return out, notes

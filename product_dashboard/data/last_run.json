@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-05T20:18:39+00:00",
+ "generated_at": "2026-10-05T21:41:37+00:00",
  "markets": {
   "FI": {
    "products_in_funnel": 106,
@@ -48,13 +48,13 @@
      "51.2"
     ]
    ],
-   "shopify_orders_used": 612,
+   "shopify_orders_used": 613,
    "shopify_orders_skipped_test": 0,
    "shopify_orders_skipped_cancelled": 0,
    "shopify_orders_other_country": {
     "SE": 1
    },
-   "shopify_window_from": "2026-08-07",
+   "shopify_window_from": "2026-08-08",
    "refund_lines": 0,
    "disputes_counted": 5,
    "refund_notes": [
@@ -64,7 +64,13 @@
     "#NOVSE1974 INQUIRY NEEDS_RESPONSE: still open (44.95 EUR) - not counted"
    ],
    "cogs_notes": [
-    "orders 1194 (invoice-scaled 1194, hidden skipped 752), products 80"
+    "invoice MU11341c1b9ec62ecbd: +2.87 not explained by shared parcels, spread over its rows by shipping",
+    "invoice MU1134186fb2efe5ced: -0.52 not explained by shared parcels, spread over its rows by shipping",
+    "invoice MU113412b4e0912a8bf: -6.29 not explained by shared parcels, spread over its rows by shipping",
+    "invoice MU11341816c3d58523b: -3.18 not explained by shared parcels, spread over its rows by shipping",
+    "invoice MU11341420c3f6cd395: -6.28 not explained by shared parcels, spread over its rows by shipping",
+    "invoice MU113415dc5bea48d2c: -9.87 not explained by shared parcels, spread over its rows by shipping",
+    "rows 1279 (invoiced 1279, not yet invoiced 0, hidden skipped 752), products 80"
    ],
    "photo_notes": [
     "no Shopify photo for: cortisa2, dermaflex2, hylon2, liftala2, resigo2"
@@ -117,7 +123,7 @@
  },
  "notes": [
   "Product Performance: 31 tabs read",
-  "Shopify returns only the last 60 days (no read_all_orders scope). Revenue before 2026-08-07 stays empty."
+  "Shopify returns only the last 60 days (no read_all_orders scope). Revenue before 2026-08-08 stays empty."
  ],
  "written": {
   "overview_rows": 114,
