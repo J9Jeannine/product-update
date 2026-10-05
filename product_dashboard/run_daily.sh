@@ -20,7 +20,7 @@ if [ ! -x "$VENV/bin/python" ]; then
 fi
 
 echo "== build_dashboard.py $*"
-"$VENV/bin/python" "$HERE/build_dashboard.py" "$@"
+"$VENV/bin/python" "$HERE/build_dashboard.py" "${@:---full}"
 
 echo "== export_html.py"
 "$VENV/bin/python" "$HERE/export_html.py"
