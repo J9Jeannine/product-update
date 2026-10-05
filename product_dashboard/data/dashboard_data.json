@@ -1,13 +1,13 @@
 {
- "generated_at": "2026-10-05T15:12:17+00:00",
+ "generated_at": "2026-10-05T20:18:39+00:00",
  "markets": {
   "FI": {
    "name": "Finland",
    "stats": {
     "tested": 104,
-    "winners": 12,
-    "losers": 92,
-    "rate": 0.11538461538461539
+    "winners": 13,
+    "losers": 91,
+    "rate": 0.125
    },
    "products": [
     {
@@ -9884,8 +9884,8 @@
     {
      "name": "FlexiVera",
      "key": "flexivera",
-     "winner": false,
-     "performance_tab": "",
+     "winner": true,
+     "performance_tab": "FlexiVera FI",
      "status": "Launched",
      "launch_date": "2026-10-04",
      "days_live": 1,

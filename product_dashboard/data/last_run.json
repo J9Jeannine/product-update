@@ -1,12 +1,12 @@
 {
- "generated_at": "2026-10-05T15:12:17+00:00",
+ "generated_at": "2026-10-05T20:18:39+00:00",
  "markets": {
   "FI": {
    "products_in_funnel": 106,
    "tested": 104,
-   "winners": 12,
-   "losers": 92,
-   "winner_rate": 0.11538461538461539,
+   "winners": 13,
+   "losers": 91,
+   "winner_rate": 0.125,
    "adspend_rows_kept": 467,
    "adspend_rows_excluded_ppe_banned": 806,
    "adspend_duplicate_rows": 6,
@@ -48,7 +48,7 @@
      "51.2"
     ]
    ],
-   "shopify_orders_used": 609,
+   "shopify_orders_used": 612,
    "shopify_orders_skipped_test": 0,
    "shopify_orders_skipped_cancelled": 0,
    "shopify_orders_other_country": {
@@ -67,7 +67,6 @@
     "orders 1194 (invoice-scaled 1194, hidden skipped 752), products 80"
    ],
    "photo_notes": [
-    "photos downloaded: 4",
     "no Shopify photo for: cortisa2, dermaflex2, hylon2, liftala2, resigo2"
    ],
    "unmatched": [
@@ -117,8 +116,14 @@
   }
  },
  "notes": [
-  "Product Performance: 30 tabs read",
-  "Shopify returns only the last 60 days (no read_all_orders scope). Revenue before 2026-08-07 stays empty.",
-  "dry run - nothing written to the Google Sheet"
- ]
+  "Product Performance: 31 tabs read",
+  "Shopify returns only the last 60 days (no read_all_orders scope). Revenue before 2026-08-07 stays empty."
+ ],
+ "written": {
+  "overview_rows": 114,
+  "product_tabs": 104,
+  "day_rows": 335,
+  "api_requests": 3525
+ },
+ "spreadsheet_url": "https://docs.google.com/spreadsheets/d/1J4Q5dV0q2selwCMIVYHYgsGpH3M94b056siX1ZIwdSk/edit"
 }
