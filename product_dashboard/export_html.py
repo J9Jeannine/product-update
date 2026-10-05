@@ -16,14 +16,13 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "lib"))
 
 import gclients            # noqa: E402
-from model import DAY_COLUMNS   # noqa: E402
+from model import METRICS   # noqa: E402
 
 CONFIG_PATH = os.path.join(HERE, "config", "dashboard.config.json")
 TEMPLATE = os.path.join(HERE, "dashboard_template.html")
 OUTPUT = os.path.join(HERE, "dashboard.html")
 
-MONEY = {"Revenue", "Refunds", "Ad Spend", "CPA", "Meta CPA", "Meta CPM", "Meta CPC"}
-NUMERIC = set(DAY_COLUMNS[1:]) - {"Ad Account"}
+
 
 
 def value(raw):
@@ -73,7 +72,7 @@ def main():
             chunk = wanted[start:start + 60]
             answer = gclients.call(sheets.spreadsheets().values().batchGet(
                 spreadsheetId=spreadsheet_id,
-                ranges=["'%s'!A3:P400" % t for t in chunk],
+                ranges=["'%s'!A1:ZZ%d" % (t, len(METRICS) + 1) for t in chunk],
                 valueRenderOption="UNFORMATTED_VALUE",
                 dateTimeRenderOption="FORMATTED_STRING"))
             for tab, result in zip(chunk, answer.get("valueRanges", [])):
@@ -81,13 +80,23 @@ def main():
 
         products = []
         for product, tab in zip(block["products"], tabs):
+            # The tab is transposed: row 1 holds the dates from column C on,
+            # and each following row is one metric.
+            grid = rows_by_tab.get(tab, [])
+            header = grid[0] if grid else []
+            dates = [str(c) for c in header[2:] if c not in (None, "")]
+            by_metric = {}
+            for row in grid[1:]:
+                if not row:
+                    continue
+                by_metric[str(row[0]).strip()] = row[2:]
             days = []
-            for row in rows_by_tab.get(tab, []):
-                day = {}
-                for index, name in enumerate(DAY_COLUMNS):
-                    day[name] = value(row[index]) if index < len(row) else None
-                if day["Date"]:
-                    days.append(day)
+            for column, date in enumerate(dates):
+                day = {"Date": date}
+                for metric in METRICS:
+                    cells = by_metric.get(metric, [])
+                    day[metric] = value(cells[column]) if column < len(cells) else None
+                days.append(day)
             item = dict(product)
             item["days"] = days
             products.append(item)

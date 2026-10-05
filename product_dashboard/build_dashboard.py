@@ -28,6 +28,7 @@ import gclients            # noqa: E402
 import sources            # noqa: E402
 import shopify_api        # noqa: E402
 import sheet_writer       # noqa: E402
+import cogs as cogs_module   # noqa: E402
 from model import build_series, winner_rate   # noqa: E402
 from normalize import normalize               # noqa: E402
 
@@ -216,8 +217,15 @@ def run(args):
             if source_key in catalog:
                 catalog.setdefault(target_key, set()).update(catalog[source_key])
 
+        try:
+            product_cogs, cogs_notes = cogs_module.fetch(
+                store.domain, config["sources"]["shopify"]["timezone"])
+        except cogs_module.CogsError as error:
+            product_cogs, cogs_notes = {}, ["COGS unavailable: %s" % error]
+        product_cogs = apply_overrides(product_cogs, overrides)
+
         series = build_series(products, adspend, winners, sales, refunds,
-                              start.isoformat(), catalog)
+                              start.isoformat(), catalog, product_cogs)
         rows, unmatched = write_mapping(market, products, adspend_log, winners,
                                         catalog, sold_titles, overrides, series)
         stats = winner_rate(series)
@@ -241,6 +249,7 @@ def run(args):
             "refund_lines": refund_log["refund_rows"],
             "disputes_counted": refund_log["disputes_counted"],
             "refund_notes": refund_log["notes"][:20],
+            "cogs_notes": cogs_notes,
             "unmatched": unmatched,
             "cross_check": cross_check(store_totals, series, 2),
         }
@@ -324,6 +333,8 @@ def print_report(report):
               % (block["refund_lines"], block["disputes_counted"]))
         for note in block["refund_notes"]:
             print("      %s" % note)
+        for note in block.get("cogs_notes", []):
+            print("      cogs: %s" % note)
         print("  cross-check against Shopify, same day, same revenue definition:")
         for row in block["cross_check"]:
             print("      %s  dashboard %9.2f | all products %9.2f (%+.2f) | "

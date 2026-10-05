@@ -1,14 +1,14 @@
 {
- "generated_at": "2026-09-28T16:15:15+00:00",
+ "generated_at": "2026-10-05T12:07:46+00:00",
  "markets": {
   "FI": {
-   "products_in_funnel": 102,
-   "tested": 97,
-   "winners": 11,
-   "losers": 86,
-   "winner_rate": 0.1134020618556701,
-   "adspend_rows_kept": 444,
-   "adspend_rows_excluded_ppe_banned": 786,
+   "products_in_funnel": 106,
+   "tested": 104,
+   "winners": 12,
+   "losers": 92,
+   "winner_rate": 0.11538461538461539,
+   "adspend_rows_kept": 467,
+   "adspend_rows_excluded_ppe_banned": 806,
    "adspend_duplicate_rows": 6,
    "adspend_duplicates": [
     [
@@ -48,23 +48,23 @@
      "51.2"
     ]
    ],
-   "shopify_orders_used": 540,
-   "shopify_orders_skipped_test": 2,
+   "shopify_orders_used": 607,
+   "shopify_orders_skipped_test": 0,
    "shopify_orders_skipped_cancelled": 0,
    "shopify_orders_other_country": {
     "SE": 1
    },
-   "shopify_window_from": "2026-07-31",
+   "shopify_window_from": "2026-08-07",
    "refund_lines": 0,
    "disputes_counted": 5,
    "refund_notes": [
     "2026-09-10 #NOVSE1860: refund of 0.00 (restock only) - not counted",
     "2026-09-26 #NOVSE2107: refund of 0.00 (restock only) - not counted",
     "2026-09-27 #NOVSE2115: refund of 0.00 (restock only) - not counted",
-    "#NOVSE1559 INQUIRY NEEDS_RESPONSE: still open (49.95 EUR) - not counted",
-    "#NOVSE1664 INQUIRY NEEDS_RESPONSE: still open (64.95 EUR) - not counted",
-    "#NOVSE1350 INQUIRY NEEDS_RESPONSE: still open (39.95 EUR) - not counted",
-    "#NOVSE1474 CHARGEBACK NEEDS_RESPONSE: still open (48.94 EUR) - not counted"
+    "#NOVSE1974 INQUIRY NEEDS_RESPONSE: still open (44.95 EUR) - not counted"
+   ],
+   "cogs_notes": [
+    "orders 1194 (invoice-scaled 1194, hidden skipped 752), products 80"
    ],
    "unmatched": [
     [
@@ -94,33 +94,33 @@
    ],
    "cross_check": [
     {
-     "date": "2026-09-26",
-     "dashboard": 769.37,
-     "shopify_products": 769.37,
-     "shopify_orders": 751.88,
-     "difference_vs_products": -0.0,
-     "difference_vs_orders": 17.49
+     "date": "2026-10-03",
+     "dashboard": 289.7,
+     "shopify_products": 289.7,
+     "shopify_orders": 289.7,
+     "difference_vs_products": 0.0,
+     "difference_vs_orders": 0.0
     },
     {
-     "date": "2026-09-27",
-     "dashboard": 680.47,
-     "shopify_products": 680.47,
-     "shopify_orders": 665.48,
-     "difference_vs_products": 0.0,
-     "difference_vs_orders": 14.99
+     "date": "2026-10-04",
+     "dashboard": 1009.92,
+     "shopify_products": 1009.92,
+     "shopify_orders": 1009.92,
+     "difference_vs_products": -0.0,
+     "difference_vs_orders": -0.0
     }
    ]
   }
  },
  "notes": [
-  "Product Performance: 29 tabs read",
-  "Shopify returns only the last 60 days (no read_all_orders scope). Revenue before 2026-07-31 stays empty."
+  "Product Performance: 30 tabs read",
+  "Shopify returns only the last 60 days (no read_all_orders scope). Revenue before 2026-08-07 stays empty."
  ],
  "written": {
-  "overview_rows": 107,
-  "product_tabs": 97,
-  "day_rows": 312,
-  "api_requests": 2320
+  "overview_rows": 114,
+  "product_tabs": 104,
+  "day_rows": 335,
+  "api_requests": 3617
  },
  "spreadsheet_url": "https://docs.google.com/spreadsheets/d/1J4Q5dV0q2selwCMIVYHYgsGpH3M94b056siX1ZIwdSk/edit"
 }

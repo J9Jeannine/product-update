@@ -29,6 +29,7 @@ query($q: String!, $cursor: String) {
       shippingAddress { countryCodeV2 }
       currentTotalPriceSet { shopMoney { amount } }
       currentSubtotalPriceSet { shopMoney { amount } }
+      currentShippingPriceSet { shopMoney { amount } }
       lineItems(first: 50) { edges { node {
         title quantity
         product { title }
@@ -100,18 +101,26 @@ class ShopifyError(RuntimeError):
     pass
 
 
-def _post(url, headers, payload):
+def _post(url, headers, payload, attempts=4):
     """curl rather than requests, for the same reason as in pnl-KIZORA:
-    it goes through the environment's proxy configuration unchanged."""
+    it goes through the environment's proxy configuration unchanged.
+
+    A long paginated pull occasionally loses the TLS connection mid-run, so a
+    dropped connection is retried rather than failing the whole market.
+    """
+    import time
     cmd = ["curl", "-sS", "--max-time", "90", "-X", "POST", "-w", "\n%{http_code}"]
     for key, value in headers.items():
         cmd += ["-H", "%s: %s" % (key, value)]
     cmd += ["-d", json.dumps(payload), url]
-    proc = subprocess.run(cmd, capture_output=True, text=True)
-    if proc.returncode != 0:
-        raise ShopifyError("curl failed: " + (proc.stderr or "").strip()[:300])
-    body, _, status = proc.stdout.rpartition("\n")
-    return status.strip(), body
+    for attempt in range(attempts):
+        proc = subprocess.run(cmd, capture_output=True, text=True)
+        if proc.returncode == 0:
+            body, _, status = proc.stdout.rpartition("\n")
+            return status.strip(), body
+        if attempt == attempts - 1:
+            raise ShopifyError("curl failed: " + (proc.stderr or "").strip()[:300])
+        time.sleep(3 * (attempt + 1))
 
 
 class Store(object):
@@ -184,13 +193,14 @@ def _line_items(node):
 
 
 class ProductDay(object):
-    __slots__ = ("revenue", "orders", "units", "refunds")
+    __slots__ = ("revenue", "orders", "units", "refunds", "shipping")
 
     def __init__(self):
         self.revenue = 0.0
         self.orders = 0
         self.units = 0
         self.refunds = 0.0
+        self.shipping = 0.0
 
 
 def fetch_catalog(store):
@@ -248,14 +258,22 @@ def fetch_sales(store, start, end, country):
             log["earliest"] = date
         store_total[date]["order_subtotal"] += float(
             order["currentSubtotalPriceSet"]["shopMoney"]["amount"])
+        lines = list(_line_items(order))
+        line_total = sum(line[2] for line in lines)
+        shipping = float(((order.get("currentShippingPriceSet") or {})
+                          .get("shopMoney") or {}).get("amount") or 0)
         seen_here = set()
-        for title, quantity, amount in _line_items(order):
+        for title, quantity, amount in lines:
             key = normalize(title)
             log["titles"][key].add(title)
             store_total[date]["line_items"] += amount
             entry = by_product[key].setdefault(date, ProductDay())
             entry.revenue += amount
             entry.units += quantity
+            # One shipping charge per order, split across the products in it
+            # by their share of the order.
+            if shipping and line_total > 0:
+                entry.shipping += shipping * (amount / line_total)
             if key not in seen_here:      # one order counts once per product
                 entry.orders += 1
                 seen_here.add(key)

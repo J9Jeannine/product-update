@@ -3,7 +3,7 @@
 
 import collections
 
-from model import DAY_COLUMNS, OVERVIEW_COLUMNS, winner_rate
+from model import METRICS, OVERVIEW_COLUMNS, SUMMED, winner_rate
 
 LIGHT_BLUE = {"red": 0.812, "green": 0.894, "blue": 0.969}
 PALE_BLUE = {"red": 0.929, "green": 0.957, "blue": 0.988}
@@ -214,66 +214,6 @@ RATIO = "0.00"
 PERCENT = "0.00%"
 
 
-def product_tab_requests(sheet_id, series, existing_rules=0):
-    """Header row, then a TOTAL row that adds itself up, then one row per day."""
-    n_rows = len(series.days) + 2
-    n_cols = len(DAY_COLUMNS)
-    first_day_row = 3                       # 1 header, 2 total, 3.. days
-    last_day_row = first_day_row + len(series.days) - 1
-
-    def total(column_index, kind="SUM"):
-        if not series.days:
-            return ""
-        letter = _a1(column_index)
-        return "=IF(COUNT(%s%d:%s%d)=0,\"\",%s(%s%d:%s%d))" % (
-            letter, first_day_row, letter, last_day_row,
-            kind, letter, first_day_row, letter, last_day_row)
-
-    index = {name: i for i, name in enumerate(DAY_COLUMNS)}
-    totals = ["TOTAL"]
-    for name in DAY_COLUMNS[1:]:
-        if name in ("Revenue", "Orders", "Units", "Refunds", "Ad Spend", "Meta Purchases"):
-            totals.append(total(index[name]))
-        elif name == "ROAS":
-            totals.append("=IF(%s2=0,\"\",%s2/%s2)" % (
-                _a1(index["Ad Spend"]), _a1(index["Revenue"]), _a1(index["Ad Spend"])))
-        elif name == "CPA":
-            totals.append("=IF(%s2=0,\"\",%s2/%s2)" % (
-                _a1(index["Orders"]), _a1(index["Ad Spend"]), _a1(index["Orders"])))
-        elif name == "Ad Account":
-            totals.append("")
-        else:
-            totals.append(total(index[name], "AVERAGE"))
-
-    rows = [_row(DAY_COLUMNS), _row(totals)]
-    for day in series.days:
-        rows.append(_row([day[name] for name in DAY_COLUMNS]))
-
-    requests = [{"updateCells": {
-        "rows": rows, "fields": "userEnteredValue",
-        "start": {"sheetId": sheet_id, "rowIndex": 0, "columnIndex": 0}}}]
-    requests += _drop_conditional_formats(sheet_id, existing_rules)
-    requests += _layout_requests(sheet_id, n_cols, max(n_rows, 2), header_rows=1)
-    requests.append({"repeatCell": {
-        "range": {"sheetId": sheet_id, "startRowIndex": 1, "endRowIndex": 2,
-                  "startColumnIndex": 0, "endColumnIndex": n_cols},
-        "cell": {"userEnteredFormat": {
-            "backgroundColor": PALE_BLUE,
-            "verticalAlignment": "MIDDLE",
-            "textFormat": {"bold": True, "fontSize": 11, "foregroundColor": DARK_BLUE}}},
-        "fields": "userEnteredFormat(backgroundColor,verticalAlignment,textFormat)"}})
-    for name, pattern in (("Revenue", CURRENCY), ("Refunds", CURRENCY),
-                          ("Ad Spend", CURRENCY), ("CPA", CURRENCY),
-                          ("Meta CPA", CURRENCY), ("Meta CPM", CURRENCY),
-                          ("Meta CPC", CURRENCY), ("ROAS", RATIO),
-                          ("Meta ROAS", RATIO), ("Meta Frequency", RATIO),
-                          ("Meta CTR", PERCENT)):
-        requests.append(_number_format(sheet_id, index[name], pattern, 1, max(n_rows, 2)))
-    if series.days:
-        requests += _roas_rules(sheet_id, index["ROAS"], first_day_row - 1, last_day_row)
-    return requests
-
-
 # ----------------------------------------------------------------- overview tab
 def build_overview_rows(markets):
     """markets: [(market_code, market_name, [ProductSeries])] -> (rows, spans)."""
@@ -314,9 +254,14 @@ def overview_requests(sheet_id, markets, existing_rules=0):
     n_cols = len(OVERVIEW_COLUMNS)
     n_rows = len(rows)
 
-    requests = [{"updateCells": {
+    requests = [{"updateSheetProperties": {
+        "properties": {"sheetId": sheet_id,
+                       "gridProperties": {"rowCount": max(n_rows, 26),
+                                          "columnCount": max(n_cols, 26)}},
+        "fields": "gridProperties(rowCount,columnCount)"}}]
+    requests.append({"updateCells": {
         "rows": [_row(r) for r in rows], "fields": "userEnteredValue",
-        "start": {"sheetId": sheet_id, "rowIndex": 0, "columnIndex": 0}}}]
+        "start": {"sheetId": sheet_id, "rowIndex": 0, "columnIndex": 0}}})
     requests += _drop_conditional_formats(sheet_id, existing_rules)
     requests += _layout_requests(sheet_id, n_cols, n_rows, header_rows=1)
 
@@ -358,3 +303,149 @@ def overview_requests(sheet_id, markets, existing_rules=0):
                 "numberFormat": {"type": "PERCENT", "pattern": "0.0%"}}},
             "fields": "userEnteredFormat.numberFormat"}})
     return requests, n_rows
+
+
+# ------------------------------------------------------------------ product tab
+CURRENCY = "#,##0.00 €"
+RATIO = "0.00"
+PERCENT = "0.00%"
+COUNT = "#,##0"
+
+# how each metric row is formatted, by name
+METRIC_FORMAT = {
+    "Revenue": CURRENCY, "Refunds": CURRENCY, "Ad Spend": CURRENCY,
+    "CPA": CURRENCY, "Profit": CURRENCY, "Shipping Income": CURRENCY,
+    "COGS": CURRENCY, "SP Fee": CURRENCY, "Transaction Fee": CURRENCY,
+    "FB Fee": CURRENCY, "Meta CPA": CURRENCY, "Meta CPM": CURRENCY,
+    "Meta CPC": CURRENCY,
+    "Orders": COUNT, "Units": COUNT, "Meta Purchases": COUNT,
+    "ROAS": RATIO, "Meta ROAS": RATIO, "Meta Frequency": RATIO,
+    "Meta CTR": PERCENT,
+}
+
+
+def product_tab_requests(sheet_id, series, existing_rules=0):
+    """One column per day, the metrics down column A.
+
+    A1 is blank, B holds TOTAL, and the days run from C. The TOTAL column is a
+    formula so it keeps adding up when a day is edited by hand; ROAS and CPA
+    are recomputed from the totals rather than averaged.
+    """
+    n_days = len(series.days)
+    first, last = 3, 2 + n_days                      # column C .. last day
+    width = max(2 + n_days, 3)
+    height = 1 + len(METRICS)
+
+    index = {name: i + 2 for i, name in enumerate(METRICS)}   # 1-based sheet row
+
+    def total(metric):
+        if not n_days:
+            return ""
+        row = index[metric]
+        span = "%s%d:%s%d" % (_a1(first - 1), row, _a1(last - 1), row)
+        kind = "SUM" if metric in SUMMED else "AVERAGE"
+        return '=IF(COUNT(%s)=0,"",%s(%s))' % (span, kind, span)
+
+    revenue_row, spend_row = index["Revenue"], index["Ad Spend"]
+    orders_row = index["Orders"]
+
+    rows = [_row([""] + ["TOTAL"] + [d["Date"] for d in series.days])]
+    for metric in METRICS:
+        if metric == "ROAS":
+            cell = '=IF(OR(B%d="",B%d=0,B%d=""),"",B%d/B%d)' % (
+                spend_row, spend_row, revenue_row, revenue_row, spend_row)
+        elif metric == "CPA":
+            cell = '=IF(OR(B%d="",B%d=0,B%d=""),"",B%d/B%d)' % (
+                orders_row, orders_row, spend_row, spend_row, orders_row)
+        else:
+            cell = total(metric)
+        rows.append(_row([metric, cell] + [d[metric] for d in series.days]))
+
+    # The grid has to be big enough first: a tab that gained days since the
+    # last run is still only as wide as it was, and updateCells refuses to
+    # write past the last column.
+    requests = [{"updateSheetProperties": {
+        "properties": {"sheetId": sheet_id,
+                       "gridProperties": {"rowCount": max(height, 26),
+                                          "columnCount": max(width, 26)}},
+        "fields": "gridProperties(rowCount,columnCount)"}}]
+    requests.append({"updateCells": {
+        "rows": rows, "fields": "userEnteredValue",
+        "start": {"sheetId": sheet_id, "rowIndex": 0, "columnIndex": 0}}})
+    requests += _drop_conditional_formats(sheet_id, existing_rules)
+
+    grid = {"sheetId": sheet_id, "startRowIndex": 0, "endRowIndex": height,
+            "startColumnIndex": 0, "endColumnIndex": width}
+    requests += [
+        {"updateSheetProperties": {
+            "properties": {"sheetId": sheet_id,
+                           "gridProperties": {"frozenRowCount": 1, "frozenColumnCount": 2}},
+            "fields": "gridProperties(frozenRowCount,frozenColumnCount)"}},
+        # header row: light blue, dark blue, bold
+        {"repeatCell": {
+            "range": {"sheetId": sheet_id, "startRowIndex": 0, "endRowIndex": 1,
+                      "startColumnIndex": 0, "endColumnIndex": width},
+            "cell": {"userEnteredFormat": {
+                "backgroundColor": LIGHT_BLUE, "horizontalAlignment": "CENTER",
+                "verticalAlignment": "MIDDLE", "wrapStrategy": "WRAP",
+                "textFormat": {"bold": True, "fontSize": 11, "foregroundColor": DARK_BLUE}}},
+            "fields": "userEnteredFormat(backgroundColor,horizontalAlignment,"
+                      "verticalAlignment,wrapStrategy,textFormat)"}},
+        # metric names and the TOTAL column
+        {"repeatCell": {
+            "range": {"sheetId": sheet_id, "startRowIndex": 1, "endRowIndex": height,
+                      "startColumnIndex": 0, "endColumnIndex": 2},
+            "cell": {"userEnteredFormat": {
+                "backgroundColor": PALE_BLUE, "verticalAlignment": "MIDDLE",
+                "textFormat": {"bold": True, "fontSize": 11, "foregroundColor": DARK_BLUE}}},
+            "fields": "userEnteredFormat(backgroundColor,verticalAlignment,textFormat)"}},
+        {"updateBorders": dict({"range": grid, "innerHorizontal": _BORDER,
+                                "innerVertical": _BORDER}, **_BORDERS)},
+        {"updateDimensionProperties": {
+            "range": {"sheetId": sheet_id, "dimension": "ROWS",
+                      "startIndex": 0, "endIndex": 1},
+            "properties": {"pixelSize": HEADER_HEIGHT}, "fields": "pixelSize"}},
+        {"updateDimensionProperties": {
+            "range": {"sheetId": sheet_id, "dimension": "ROWS",
+                      "startIndex": 1, "endIndex": height},
+            "properties": {"pixelSize": ROW_HEIGHT}, "fields": "pixelSize"}},
+        {"updateDimensionProperties": {
+            "range": {"sheetId": sheet_id, "dimension": "COLUMNS",
+                      "startIndex": 0, "endIndex": 1},
+            "properties": {"pixelSize": FIRST_COL_WIDTH}, "fields": "pixelSize"}},
+        {"updateDimensionProperties": {
+            "range": {"sheetId": sheet_id, "dimension": "COLUMNS",
+                      "startIndex": 1, "endIndex": width},
+            "properties": {"pixelSize": COL_WIDTH}, "fields": "pixelSize"}},
+    ]
+
+    # one number format per metric row, across the whole row
+    for metric, pattern in METRIC_FORMAT.items():
+        row = index[metric] - 1
+        requests.append({"repeatCell": {
+            "range": {"sheetId": sheet_id, "startRowIndex": row, "endRowIndex": row + 1,
+                      "startColumnIndex": 1, "endColumnIndex": width},
+            "cell": {"userEnteredFormat": {
+                "numberFormat": {"type": "NUMBER", "pattern": pattern}}},
+            "fields": "userEnteredFormat.numberFormat"}})
+
+    # daily ROAS: red below 1, green from 1 up
+    if n_days:
+        roas = index["ROAS"] - 1
+        span = {"sheetId": sheet_id, "startRowIndex": roas, "endRowIndex": roas + 1,
+                "startColumnIndex": first - 1, "endColumnIndex": last}
+        requests += [
+            {"addConditionalFormatRule": {"index": 0, "rule": {
+                "ranges": [span],
+                "booleanRule": {
+                    "condition": {"type": "NUMBER_LESS",
+                                  "values": [{"userEnteredValue": "1"}]},
+                    "format": {"textFormat": {"bold": True, "foregroundColor": RED}}}}}},
+            {"addConditionalFormatRule": {"index": 0, "rule": {
+                "ranges": [span],
+                "booleanRule": {
+                    "condition": {"type": "NUMBER_GREATER_THAN_EQ",
+                                  "values": [{"userEnteredValue": "1"}]},
+                    "format": {"textFormat": {"bold": True, "foregroundColor": GREEN}}}}}},
+        ]
+    return requests
