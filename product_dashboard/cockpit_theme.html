@@ -1,0 +1,54 @@
+<style id="space-pink-theme">
+  /* Space theme: deep navy ground, pink + violet nebula, pink accents. Always dark. */
+  :root:root:root,:root:root:root[data-theme]{
+    color-scheme:dark;
+    --bg:#070817; --surface:#10132E; --surface-2:#171B3D; --line:#272B5A;
+    --ink:#F4EEFF; --ink-2:#BDB5DD; --ink-3:#8780AE;
+    --brand:#FF6FB5; --brand-soft:rgba(255,111,181,.15);
+    --rev:#FF8CC6; --spend:#8E9CFF;
+    --good:#5DD6A2; --good-ink:#9FF0CB; --good-bg:rgba(93,214,162,.16);
+    --ok:#F2C66B;   --ok-ink:#FFDE96;   --ok-bg:rgba(242,198,107,.16);
+    --bad:#FF6F86;  --bad-ink:#FFB0BD;  --bad-bg:rgba(255,111,134,.16);
+    --none:#363B6B; --none-bg:rgba(135,128,174,.16);
+    --live:#5DD6A2; --killed:#454A7A;
+    --gold-bg:#5A4320; --gold-ink:#FFE09A;
+    --c1:#FF8CC6; --c2:#B79BFF; --c3:#7FD8D0; --c4:#F2C66B; --c5:#FF9FB0; --c6:#8E9CFF; --c7:#D59BFF; --c8:#7FC6FF;
+    --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 30px rgba(0,0,0,.35);
+  }
+  body{
+    background:
+      radial-gradient(1000px 560px at 8% -10%, rgba(255,111,181,.20), transparent 62%),
+      radial-gradient(900px 520px at 95% 2%, rgba(150,110,255,.16), transparent 60%),
+      radial-gradient(1200px 700px at 50% 115%, rgba(80,90,255,.12), transparent 65%),
+      var(--bg);
+    background-attachment:fixed;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.55;
+    background-image:
+      radial-gradient(1px 1px at 12% 18%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 27% 62%, #ffd6ec 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 41% 33%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 58% 78%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 66% 14%, #e6dcff 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 79% 48%, #ffd6ec 50%, transparent 51%),
+      radial-gradient(1px 1px at 88% 86%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 6% 82%, #e6dcff 50%, transparent 51%),
+      radial-gradient(1px 1px at 93% 26%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 35% 92%, #fff 50%, transparent 51%);
+    background-size:420px 420px;
+  }
+  .top{background:color-mix(in srgb,var(--bg) 80%,transparent);border-bottom-color:rgba(255,111,181,.18)}
+  .kpi,.card,.roster,.tile,.box,.thbox{border:1px solid var(--line)}
+  .kpi.hero{background:linear-gradient(150deg,rgba(255,111,181,.16),rgba(16,19,46,.2) 60%),var(--surface);border-color:rgba(255,111,181,.45);box-shadow:0 0 0 1px rgba(255,111,181,.15),0 12px 34px rgba(255,111,181,.12)}
+  .open{background:linear-gradient(135deg,#FF6FB5,#C77DFF);color:#1A0B24}
+  .open:hover{background:linear-gradient(135deg,#FF8CC6,#D59BFF);color:#1A0B24}
+  .seg button[aria-pressed="true"]{background:linear-gradient(135deg,#FF6FB5,#C77DFF);color:#1A0B24}
+  a.pillbtn:hover,.periodbar input[type=date]:hover{border-color:var(--brand);color:var(--brand)}
+  .periodbar input[type=date],.search,.thbox input{color-scheme:dark}
+  .search:focus,.thbox input:focus{outline:none;border-color:var(--brand)}
+  .row:hover{background:rgba(255,111,181,.06)}
+  .tip,.toast{background:#1E2250;color:var(--ink);border:1px solid rgba(255,111,181,.3)}
+  .veil{background:rgba(4,4,14,.6);backdrop-filter:blur(3px)}
+  .avatar.photo{border-color:rgba(255,111,181,.25)}
+</style>

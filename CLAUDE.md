@@ -34,3 +34,9 @@ must not be transposed back.
 The cockpit carries its data as an **embedded JSON snapshot**, not a live read
 of the sheet. Filling the sheet alone does not update it — the snapshot has to
 be regenerated and the artifact republished.
+
+## Look
+
+The cockpit uses the **space-pink theme** (deep navy, pink/violet nebula,
+pink accents), always dark. It lives in `product_dashboard/cockpit_theme.html`
+and `refresh_cockpit.py` re-applies it if the source page lacks it.

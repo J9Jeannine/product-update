@@ -132,5 +132,15 @@ for code, m in old["markets"].items():
     print("  %s stats: %s" % (code, m["stats"]))
 
 payload = json.dumps(old, separators=(",", ":")).replace("</", "<\\/")
+
+# Space-pink theme (Jeannine, 5 Oct): re-apply it if the page it was built from
+# predates it, so a refresh never brings back the old light-blue look.
+THEME = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cockpit_theme.html")
+if 'id="space-pink-theme"' not in html and os.path.exists(THEME):
+    anchor = html.index("</style>", html.index("Bricolage+Grotesque")) + len("</style>")
+    html = html[:anchor] + "\n" + io.open(THEME, encoding="utf-8").read() + html[anchor:]
+    start = html.index(OPEN) + len(OPEN)
+    end = html.index("</script>", start)
+    print("space-pink theme applied")
 io.open(OUT, "w", encoding="utf-8").write(html[:start] + payload + html[end:])
 print("wrote %s (%.0f KB)" % (OUT, os.path.getsize(OUT) / 1024.0))
