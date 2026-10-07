@@ -39,4 +39,10 @@ be regenerated and the artifact republished.
 
 The cockpit uses the **space-pink theme** (deep navy, pink/violet nebula,
 pink accents), always dark. It lives in `product_dashboard/cockpit_theme.html`
-and `refresh_cockpit.py` re-applies it if the source page lacks it.
+and `refresh_cockpit.py` re-applies it if the source page lacks it. The same
+refresh repaints the logo and the two icon SVGs, because those are what the
+browser tab and the installed desktop app show and the stylesheet cannot
+reach them.
+
+The **P&L cockpit stays blue.** Pink is the tested-products cockpit; the two
+are told apart by colour.
