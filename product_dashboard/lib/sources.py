@@ -27,6 +27,7 @@ class Product(object):
         self.market = market
         self.names = [name]
         self.statuses = []
+        self.rows = []            # sheet row number of every funnel row, same order as statuses
 
     # Jeannine's rule: every product row in the Funnel Sheet was tested and
     # counts toward the winner rate. A row is only left out while its status
@@ -45,6 +46,13 @@ class Product(object):
     def test_count(self):
         """Every funnel row of this product is one test, relaunch rows included."""
         return sum(1 for s in self.statuses if self.row_tested(s))
+
+    @property
+    def test_order(self):
+        """Sheet row of the newest test of this product. The Funnel Sheet lists
+        tests in the order they were made, so a higher row is a newer test."""
+        tested = [r for r, s in zip(self.rows, self.statuses) if self.row_tested(s)]
+        return max(tested or self.rows or [0])
 
     @property
     def status(self):
@@ -70,7 +78,7 @@ def read_funnel(sheets_service, config, market):
     rows = read_values(sheets_service, spec["spreadsheet_id"],
                        "'%s'!A1:Z1000" % tab)
     products = collections.OrderedDict()
-    for row in rows[spec["header_rows"]:]:
+    for row_no, row in enumerate(rows[spec["header_rows"]:], spec["header_rows"] + 1):
         name = _cell(row, spec["product_name_column"])
         status = _cell(row, spec["status_column"])
         if not name:
@@ -84,6 +92,7 @@ def read_funnel(sheets_service, config, market):
         elif name not in product.names:
             product.names.append(name)
         product.statuses.append(status)
+        product.rows.append(row_no)
     return products
 
 

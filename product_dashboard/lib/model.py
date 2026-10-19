@@ -46,6 +46,7 @@ class ProductSeries(object):
         self.market = product.market
         self.status = product.status
         self.test_count = product.test_count
+        self.test_order = product.test_order
         self.winner = winner              # tab name, or "" for a loser
         self.adspend_names = sorted(adspend_names)
         self.shopify_titles = sorted(shopify_titles)

@@ -270,6 +270,7 @@ def run(args):
                 "name": item.name, "key": item.key, "winner": item.is_winner,
                 "performance_tab": item.winner, "status": item.status,
                 "launch_date": item.launch_date, "days_live": item.days_live,
+                "test_order": item.test_order,
                 "total_spend": item.total_spend, "total_revenue": item.total_revenue,
                 "total_orders": item.total_orders, "roas": item.roas, "cpa": item.cpa,
                 "adspend_names": item.adspend_names,

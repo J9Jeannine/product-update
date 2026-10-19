@@ -86,6 +86,7 @@ for code, market in run["markets"].items():
             "name": p["name"], "key": p["key"], "winner": p["winner"],
             "performance_tab": p["performance_tab"], "status": p["status"],
             "launch_date": p["launch_date"], "days_live": p["days_live"],
+            "test_order": p.get("test_order"),
             "total_spend": p["total_spend"], "total_revenue": p["total_revenue"],
             "total_orders": p["total_orders"], "roas": p["roas"], "cpa": p["cpa"],
             "adspend_names": p["adspend_names"], "shopify_titles": p["shopify_titles"],
