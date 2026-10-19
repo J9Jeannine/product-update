@@ -45,6 +45,7 @@ class ProductSeries(object):
         self.all_names = product.names
         self.market = product.market
         self.status = product.status
+        self.test_count = product.test_count
         self.winner = winner              # tab name, or "" for a loser
         self.adspend_names = sorted(adspend_names)
         self.shopify_titles = sorted(shopify_titles)
@@ -176,7 +177,8 @@ def build_series(products, adspend, winners, sales, refunds, revenue_from,
 
 
 def winner_rate(series):
-    tested = len(series)
+    # One test per funnel row: a relaunch is a second test of the same product.
+    tested = sum(s.test_count for s in series)
     winners = sum(1 for s in series if s.is_winner)
     return {
         "tested": tested,

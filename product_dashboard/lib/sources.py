@@ -28,17 +28,33 @@ class Product(object):
         self.names = [name]
         self.statuses = []
 
+    # Jeannine's rule: every product row in the Funnel Sheet was tested and
+    # counts toward the winner rate. A row is only left out while its status
+    # column says something else on purpose (e.g. "Ready to launch").
+    # An empty status therefore counts as tested.
+    @classmethod
+    def row_tested(cls, status):
+        low = status.strip().lower()
+        return low == "" or low in cls._tested
+
     @property
     def tested(self):
-        return any(s in self._tested for s in (x.strip().lower() for x in self.statuses))
+        return self.test_count > 0
+
+    @property
+    def test_count(self):
+        """Every funnel row of this product is one test, relaunch rows included."""
+        return sum(1 for s in self.statuses if self.row_tested(s))
 
     @property
     def status(self):
         low = [s.strip().lower() for s in self.statuses]
         if any(s in ("re-launch", "relaunch") for s in low):
             return "Re-launch"
-        if self.tested:
+        if any(s in self._tested for s in low):
             return "Launched"
+        if self.tested:
+            return "Tested (no status)"
         return next((s for s in self.statuses if s), "") or "(empty)"
 
     _tested = ("launched", "re-launch", "relaunch")
